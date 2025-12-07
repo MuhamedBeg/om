@@ -248,7 +248,7 @@
     }
 
     .swatch-c2 {
-      background: #f97316;
+      background: #22c55e;
     }
 
     .swatch-h1 {
@@ -486,21 +486,21 @@
       color: #6b7280;
     }
 
-    .popup-sv-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 14px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #2563eb, #1d4ed8);
-      color: #ffffff;
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
-      white-space: normal;
-      text-align: left;
-    }
+.popup-sv-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #0ea5e9, #2563eb);
+  color: #ffffff !important;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  white-space: nowrap;
+}
 
     .popup-sv-btn span.icon {
       font-size: 15px;
@@ -1564,6 +1564,23 @@ input[type="date"]::-moz-calendar-picker-indicator {
         .trim();
     }
 
+        function getAccidentIcon(typeLabel) {
+      const t = normalizeType(typeLabel);
+
+      if (t.includes("pješak")) return "🚶‍♂️";
+      if (t.includes("bicikl")) return "🚴";
+      if (t.includes("motocikl") || t.includes("motor")) return "🏍️";
+      if (t.includes("autobus")) return "🚌";
+      if (t.includes("kamion") || t.includes("teretno")) return "🚚";
+      if (t.includes("tramvaj")) return "🚋";
+      if (t.includes("lančani") || t.includes("vise vozila")) return "🚗🚙";
+      if (t.includes("prevrtanje") || t.includes("sletanje")) return "↘️";
+
+      // default
+      return "💥";
+    }
+
+
     function haversineMeters(lat1, lon1, lat2, lon2) {
       const R = 6371000;
       const toRad = x => x * Math.PI / 180;
@@ -1691,9 +1708,14 @@ function parseDateFlexible(str) {
       return `
         <div class="popup-card">
           <div class="popup-header">
-            <div class="popup-icon">💥</div>
+            <div class="popup-icon">${getAccidentIcon(typeLabel)}</div>
             <div>
-              <div class="popup-title">${typeLabel}</div>
+              <div class="popup-title">
+                ${typeLabel}
+                ${a.accId != null
+                  ? `<span class="popup-id">#${a.accId}</span>`
+                  : ""}
+              </div>
               <div class="popup-subtitle">
                 ${date || "Datum nepoznat"} • ${time || "Vrijeme nepoznato"}${area ? " • " + area : ""}
               </div>
@@ -2279,7 +2301,11 @@ hazard4Layer.clearLayers();
 
         let color = "#ef4444";
         let fill = "#ef4444";
-        if (!inC1 && inC2) { color = "#ea580c"; fill = "#f97316"; }
+        if (!inC1 && inC2) { 
+  color = "#15803d";   // tamnija zelena ivica
+  fill  = "#22c55e";   // lijepa zelena ispuna
+}
+
 
         let extra = "";
         if (inC1 && inC2) {
@@ -3242,6 +3268,12 @@ hazard4Layer.clearLayers();
 
           const rawType = row["Vrsta, tip saobraćajne nezgode"] || "";
           const typeKey = normalizeType(rawType);
+          const accId =
+          row["R.br."] ??
+          row["R.br"] ??
+          row["Rbr"] ??
+          row["ID"] ??
+          (idx + 1);
 
           // umjesto starog dijela sa deaths/serious/minor/injuryTotal
           const deaths = Number(row["Broj poginulih osoba"] ?? 0);
@@ -3289,6 +3321,7 @@ hazard4Layer.clearLayers();
 
           accidentsAll.push({
             id: idx,
+            accId,
             raw: row,
             lat, lon,
             typeRaw: rawType,
@@ -3481,6 +3514,7 @@ hazard4Layer.clearLayers();
 </body>
 
 </html>
+
 
 
 
