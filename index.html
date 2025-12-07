@@ -1535,24 +1535,45 @@
       return h;
     }
 
-    function parseDateFlexible(str) {
-      if (!str) return null;
-      const s = str.toString().trim();
-      if (!s) return null;
-      let d = new Date(s);
-      if (!isNaN(d.getTime())) return d;
-      const parts = s.split(".");
-      if (parts.length === 3) {
-        const [dd, mm, yy] = parts.map(p => p.trim());
-        const day = parseInt(dd, 10);
-        const month = parseInt(mm, 10) - 1;
-        let year = parseInt(yy, 10);
-        if (year < 100) year += 2000;
-        d = new Date(year, month, day);
-        if (!isNaN(d.getTime())) return d;
-      }
-      return null;
-    }
+function parseDateFlexible(str) {
+  if (!str) return null;
+  const s = str.toString().trim();
+  if (!s) return null;
+
+  // 1) ISO format koji dolazi iz <input type="date">: YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+    const [yyyy, mm, dd] = s.split("-").map(n => parseInt(n, 10));
+    const d = new Date(yyyy, mm - 1, dd);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  // 2) CSV format: DD/MM/YYYY
+  let m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if (m) {
+    let day = parseInt(m[1], 10);
+    let month = parseInt(m[2], 10) - 1; // 0–11
+    let year = parseInt(m[3], 10);
+    if (year < 100) year += 2000;
+    const d = new Date(year, month, day);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  // 3) Rezervna varijanta: DD.MM.YYYY (ako se negdje pojavi)
+  m = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$/);
+  if (m) {
+    let day = parseInt(m[1], 10);
+    let month = parseInt(m[2], 10) - 1;
+    let year = parseInt(m[3], 10);
+    if (year < 100) year += 2000;
+    const d = new Date(year, month, day);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  // 4) Posljednja šansa – ako je ipak nešto standardno što Date razumije
+  const fallback = new Date(s);
+  return isNaN(fallback.getTime()) ? null : fallback;
+}
+
 
     function dbscan(points, epsMeters, minPts) {
       const n = points.length;
@@ -3408,5 +3429,6 @@ hazard4Layer.clearLayers();
 </body>
 
 </html>
+
 
 
