@@ -1017,6 +1017,7 @@ input[type="date"]::-moz-calendar-picker-indicator {
                     <option value="7">Nedjelja</option>
                   </select>
                 </div>
+                <br>
                 <div class="filter-group">
                   <label for="filter-hour-from">Sat od (0–23)</label>
                   <input type="number" id="filter-hour-from" min="0" max="23" placeholder="">
@@ -1864,7 +1865,7 @@ function parseDateFlexible(str) {
       <div class="popup-footer">
         <a class="popup-sv-btn" href="${streetUrl}" target="_blank" rel="noopener">
           <span class="icon">🧭</span>
-          <span>Street View – opasno mjesto</span>
+          <span>Otvori Street View</span>
         </a>
         <span class="popup-coords">${lat.toFixed(5)}, ${lon.toFixed(5)}</span>
       </div>
@@ -3514,6 +3515,7 @@ hazard4Layer.clearLayers();
 </body>
 
 </html>
+
 
 
 
