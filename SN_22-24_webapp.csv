@@ -296,7 +296,7 @@
 295,43.8547915,18.3848007,Lokalna cesta,10/09/2023,00:25:00,Vedro,Noć,Suh,0,0,2,Izlijetanje izvan kolovoza,Urbano,Jednosmjerna cesta,Pravac,Ne,Bez raskrsnice,Bez prelaza,Ne,Da,0,0,2,0,1,,,,,,,,,
 296,43.85792,18.42884,Lokalna cesta,07/11/2023,12:00:00,Vedro,Dan,Suh,0,0,2,Udar u pješaka,Urbano,Jednosmjerna cesta,Krivina,Ne,Bez raskrsnice,Pješački prelaz,Ne,Da,0,0,2,0,1,1,,,,,,,,
 297,43.88232,18.30304,Lokalna cesta,12/03/2024,07:45:00,Kiša,Dan,Mokar,0,0,1,Sudar prilikom skretanja,Urbano,Dvosmjerna cesta,Pravac,Ne,Bez raskrsnice,Bez prelaza,Ne,Da,0,0,1,0,2,,,,,,,,,
-298,43.85392,11.83925,Lokalna cesta,28/03/2024,19:20:00,Vedro,Noć,Suh,0,0,1,Izlijetanje izvan kolovoza,Urbano,Jednosmjerna cesta,Pravac,Ne,Četverokraka raskrsnica,Pješački prelaz,Ne,Da,0,0,1,0,1,,,,,,,,,
+298,43.8523718782522,18.3391869850679,Lokalna cesta,28/03/2024,19:20:00,Vedro,Noć,Suh,0,0,1,Izlijetanje izvan kolovoza,Urbano,Jednosmjerna cesta,Pravac,Ne,Četverokraka raskrsnica,Pješački prelaz,Ne,Da,0,0,1,0,1,,,,,,,,,
 299,43.85332,18.38952,Lokalna cesta,15/04/2024,21:00:00,Vedro,Noć,Suh,0,0,1,Sudar prilikom skretanja,Urbano,Jednosmjerna cesta,Pravac,Ne,T-raskrsnica,Pješački prelaz,Da,Da,0,0,1,0,2,,,,,,,,,
 300,43.84926,18.36688,Lokalna cesta,17/04/2024,21:15:00,Vedro,Noć,Mokar,0,0,1,Sudar prilikom skretanja,Urbano,Jednosmjerna cesta,Pravac,Ne,Četverokraka raskrsnica,Pješački prelaz,Da,Da,0,0,1,0,2,,,,,,,,,
 301,43.8476,18.3564,Lokalna cesta,07/07/2024,01:40:00,Vedro,Noć,Suh,0,0,1,Izlijetanje izvan kolovoza,Urbano,Dvosmjerna cesta,Pravac,Ne,Bez raskrsnice,Bez prelaza,Ne,Da,0,0,1,0,1,,,,,,,,,
@@ -636,7 +636,7 @@
 635,43.84948,18.3652,Magistralna cesta,02/12/2024,08:55:00,Vedro,Dan,Suh,0,1,0,Udar u pješaka,Urbano,Jednosmjerna cesta,Pravac,Ne,Bez raskrsnice,Bez prelaza,Da,Ne,0,0,1,0,1,,,,,,,,,
 636,43.8036,18.2037,Lokalna cesta,07/12/2024,17:50:00,Vedro,Dan,Suh,0,0,1,Udar u pješaka,Urbano,Dvosmjerna cesta,Pravac,Da,Bez raskrsnice,Bez prelaza,Ne,Ne,0,0,0,0,1,,,,,,,,,
 637,43.852339,18.33917,Regionalna cesta,13/12/2024,15:15:00,Vedro,Dan,Suh,0,1,0,Sudar prilikom skretanja,Urbano,Dvosmjerna cesta,Pravac,Ne,Bez raskrsnice,Bez prelaza,Ne,Ne,0,0,1,0,2,,,,,,,,,
-638,43.5242,18.2025,Magistralna cesta,15/12/2024,00:50:00,Vedro,Noć,Suh,0,1,0,Sudar prilikom obilaženja,Urbano,Jednosmjerna cesta,Pravac,Ne,Bez raskrsnice,Bez prelaza,Ne,Da,0,0,1,0,2,,,,,,,,,
+638,43.84907763,18.36529924,Magistralna cesta,15/12/2024,00:50:00,Vedro,Noć,Suh,0,1,0,Sudar prilikom obilaženja,Urbano,Jednosmjerna cesta,Pravac,Ne,Bez raskrsnice,Bez prelaza,Ne,Da,0,0,1,0,2,,,,,,,,,
 639,43.85081,18.366179,Lokalna cesta,27/12/2024,19:05:00,Vedro,Noć,Suh,0,1,0,Udar prednjim dijelom vozila,Urbano,Dvosmjerna cesta,Pravac,Ne,Bez raskrsnice,Bez prelaza,Ne,Da,0,0,1,0,3,,,,,,,,,
 640,43.845441,18.277777,Regionalna cesta,02/09/2022,15:22:00,Vedro,Dan,Suh,0,1,0,Sudar vozila i bicikla,Urbano,Dvosmjerna cesta,Pravac,Ne,Bez raskrsnice,Bez prelaza,Ne,Da,0,0,1,0,1,,1,,,,,,,
 641,43.8247,18.30773,Lokalna cesta,12/09/2022,16:00:00,Vedro,Dan,Suh,0,1,0,Udar prednjim dijelom vozila,Urbano,Jednosmjerna cesta,Pravac,Ne,Bez raskrsnice,Bez prelaza,Ne,Da,0,0,1,0,2,,,,,,,,,
@@ -808,4 +808,5 @@
 807,43.833767,18.31212,Lokalna cesta,21/12/2023,23:35:00,Kiša,Noć,Mokar,0,0,3,Udar prednjim dijelom vozila,Urbano,Dvosmjerna cesta,Pravac,Ne,Trokraka raskrsnica,Pješački prelaz,Da,Da,0,0,3,0,1,,,,,,,,,
 808,43.860605,18.420354,Lokalna cesta,22/12/2023,14:15:00,Vedro,Dan,Suh,0,0,1,Udar u pješaka,Urbano,Dvosmjerna cesta,Krivina,Da,Četverokraka raskrsnica,U blizini pješačkog prelaza,Da,Da,0,0,1,0,1,1,,,,,,,,
 809,43.840684,18.337962,Lokalna cesta,28/12/2023,11:10:00,Kiša,Dan,Mokar,0,0,1,Udar u pješaka,Urbano,Dvosmjerna cesta,Pravac,Ne,Trokraka raskrsnica,Pješački prelaz,Da,Da,0,0,1,0,1,1,,,,,,,,
+
 
