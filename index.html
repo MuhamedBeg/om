@@ -765,6 +765,27 @@
       color: #e5e7eb;
     }
 
+    /* ✅ POPRAVKA ZA DATE PICKER – VRATI NATIVE KALENDAR */
+input[type="date"] {
+  appearance: auto !important;
+  -webkit-appearance: auto !important;
+  -moz-appearance: auto !important;
+  background-color: #020617;
+  color-scheme: dark;   /* da kalendar bude dark-friendly */
+  cursor: pointer;
+}
+
+/* ✅ VRATI KLIK EVENT (ako je negdje blokiran) */
+input[type="date"] {
+  pointer-events: auto !important;
+}
+
+/* ✅ VRAĆA IKONICU KALENDARA */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);   /* bijela ikonica na tamnoj pozadini */
+  cursor: pointer;
+}
+
 
 
     @media (max-width: 900px) {
@@ -3429,6 +3450,7 @@ hazard4Layer.clearLayers();
 </body>
 
 </html>
+
 
 
 
