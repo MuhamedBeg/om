@@ -786,6 +786,33 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
+    /* ✅ Bolja vidljivost date ikone u tamnoj temi */
+input[type="date"] {
+  position: relative;
+  padding-right: 28px;        /* mjesto za ikonicu */
+}
+
+/* Chrome / Edge / Brave (WebKit) */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #111827;        /* tamno siva pločica ispod ikone */
+  border-radius: 999px;
+  padding: 4px;
+  filter: invert(1);          /* bijela ikonica na tamnoj pozadini */
+  cursor: pointer;
+}
+
+/* Firefox – barem kursor da bude jasan */
+input[type="date"]::-moz-focus-inner {
+  border: 0;
+}
+input[type="date"]::-moz-calendar-picker-indicator {
+  cursor: pointer;
+}
+
 
 
     @media (max-width: 900px) {
@@ -3450,6 +3477,7 @@ hazard4Layer.clearLayers();
 </body>
 
 </html>
+
 
 
 
