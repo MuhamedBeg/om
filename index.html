@@ -1002,7 +1002,7 @@
                   </select>
                 </div>
                 <div class="filter-group">
-                  <label for="filter-kat-puta">Kategorija puta</label>
+                  <label for="filter-kat-puta">Kategorija saobraćajnice</label>
                   <select id="filter-kat-puta">
                     <option value="">(sve)</option>
                   </select>
@@ -1605,7 +1605,7 @@
       const time = r["Vrijeme nastanka saobraćajne nezgode"] || "";
       const area = r["Područje"] || "";
       const tipPuta = r["Tip puta"] || "";
-      const katPuta = r["Kategorija puta"] || "";
+      const katPuta = r["Kategorija saobraćajnice"] || "";
       const dioDana = a.dayNight || "";
       const kolovoz = r["Stanje kolovoza"] || "";
       const rasvjeta = r["Rasvjeta"] || "";
@@ -1942,7 +1942,7 @@ roadsLayer = L.layerGroup();
       }
       addSel(fPodrucje, "područje");
       addSel(fTipPuta, "tip puta");
-      addSel(fKatPuta, "kategorija puta");
+      addSel(fKatPuta, "kategorija saobraćajnice");
       addSel(fHorizGeo, "horizontalna geometrija");
       addSel(fVertGeo, "vertikalna geometrija");
       addSel(fTipRask, "tip raskrsnice");
@@ -2340,7 +2340,7 @@ hazard4Layer.clearLayers();
 
         if (!eqSel(fPodrucje, "Područje")) return false;
         if (!eqSel(fTipPuta, "Tip puta")) return false;
-        if (!eqSel(fKatPuta, "Kategorija puta")) return false;
+        if (!eqSel(fKatPuta, "Kategorija saobraćajnice")) return false;
         if (!eqSel(fHorizGeo, "Horizontalna geometrija")) return false;
         if (!eqSel(fVertGeo, "Vertikalna geometrija")) return false;
         if (!eqSel(fTipRask, "Tip raskrsnice")) return false;
@@ -2428,7 +2428,7 @@ hazard4Layer.clearLayers();
 
       fillSelect(fPodrucje, collectUnique("Područje"));
       fillSelect(fTipPuta, collectUnique("Tip puta"));
-      fillSelect(fKatPuta, collectUnique("Kategorija puta"));
+      fillSelect(fKatPuta, collectUnique("Kategorija saobraćajnice"));
       fillSelect(fHorizGeo, collectUnique("Horizontalna geometrija"));
       fillSelect(fVertGeo, collectUnique("Vertikalna geometrija"));
       fillSelect(fTipRask, collectUnique("Tip raskrsnice"));
@@ -2497,7 +2497,7 @@ hazard4Layer.clearLayers();
       }
 
       const tipPuta = cat("Tip puta", "Tip puta");
-      const katPuta = cat("Kategorija puta", "Kategorija puta");
+      const katPuta = cat("Kategorija saobraćajnice", "Kategorija saobraćajnice");
       const kolovoz = cat("Stanje kolovoza", "Stanje kolovoza");
 
       let sumDeaths = 0, sumSerious = 0, sumMinor = 0, sumInj = 0;
@@ -3408,4 +3408,5 @@ hazard4Layer.clearLayers();
 </body>
 
 </html>
+
 
