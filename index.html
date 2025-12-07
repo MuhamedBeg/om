@@ -765,53 +765,57 @@
       color: #e5e7eb;
     }
 
-    /* ✅ POPRAVKA ZA DATE PICKER – VRATI NATIVE KALENDAR */
+/* ===== ISPRAVLJEN DATE PICKER ZA DARK MODE SA PRAVOM IKONOM ===== */
+
 input[type="date"] {
   appearance: auto !important;
   -webkit-appearance: auto !important;
   -moz-appearance: auto !important;
   background-color: #020617;
-  color-scheme: dark;   /* da kalendar bude dark-friendly */
+  color-scheme: dark;
   cursor: pointer;
-}
-
-/* ✅ VRATI KLIK EVENT (ako je negdje blokiran) */
-input[type="date"] {
   pointer-events: auto !important;
-}
 
-/* ✅ VRAĆA IKONICU KALENDARA */
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);   /* bijela ikonica na tamnoj pozadini */
-  cursor: pointer;
-}
-
-    /* ✅ Bolja vidljivost date ikone u tamnoj temi */
-input[type="date"] {
   position: relative;
-  padding-right: 28px;        /* mjesto za ikonicu */
+  padding-right: 34px;   /* prostor za ikonu */
 }
 
-/* Chrome / Edge / Brave (WebKit) */
+/* Sakrij nativni "ružni" krug u Chrome/Edge */
 input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
   position: absolute;
   right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #111827;        /* tamno siva pločica ispod ikone */
-  border-radius: 999px;
-  padding: 4px;
-  filter: invert(1);          /* bijela ikonica na tamnoj pozadini */
+  width: 24px;
+  height: 24px;
   cursor: pointer;
+  z-index: 2;
 }
 
-/* Firefox – barem kursor da bude jasan */
+/* Prava vidljiva ikona kalendara (emoji varijanta) */
+input[type="date"]::after {
+  content: "📅";
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 15px;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* Hover efekat za bolji UX */
+input[type="date"]:hover::after {
+  opacity: 1;
+}
+
+/* Firefox fallback – samo da ostane klik */
 input[type="date"]::-moz-focus-inner {
   border: 0;
 }
 input[type="date"]::-moz-calendar-picker-indicator {
   cursor: pointer;
 }
+
 
 
 
@@ -3477,6 +3481,7 @@ hazard4Layer.clearLayers();
 </body>
 
 </html>
+
 
 
 
