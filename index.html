@@ -236,7 +236,7 @@
       width: 12px;
       height: 12px;
       border-radius: 50%;
-      border: 1px solid #020617;
+      border: 1px solid #ffffff;
     }
 
     .swatch-all {
@@ -364,15 +364,15 @@
       box-shadow: 0 14px 30px rgba(15, 23, 42, 0.55);
       border: 1px solid #d1d5db;
       overflow: hidden;
-      max-width: 420px;
+      max-width: 480px !important;
     }
 
     .leaflet-popup-content {
-      margin: 10px 12px;
+      margin: 8px 10px;
     }
 
     .popup-card {
-      max-width: 100%;
+      max-width: 480px;
       font-size: 15px;
       color: #111827;
       word-wrap: break-word;
@@ -486,21 +486,21 @@
       color: #6b7280;
     }
 
-.popup-sv-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 18px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #0ea5e9, #2563eb);
-  color: #ffffff !important;
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: none;
-  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  white-space: nowrap;
-}
+    .popup-sv-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #0ea5e9, #2563eb);
+      color: #ffffff !important;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      white-space: nowrap;
+    }
 
     .popup-sv-btn span.icon {
       font-size: 15px;
@@ -529,7 +529,7 @@
     .haz-acc-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 12px;
+      font-size: 11px;
     }
 
     .haz-acc-table thead {
@@ -541,6 +541,7 @@
 
     .haz-acc-table th,
     .haz-acc-table td {
+      text-align: center;
       padding: 3px 6px;
       border-bottom: 1px solid #e5e7eb;
       white-space: nowrap;
@@ -765,56 +766,58 @@
       color: #e5e7eb;
     }
 
-/* ===== ISPRAVLJEN DATE PICKER ZA DARK MODE SA PRAVOM IKONOM ===== */
+    /* ===== ISPRAVLJEN DATE PICKER ZA DARK MODE SA PRAVOM IKONOM ===== */
 
-input[type="date"] {
-  appearance: auto !important;
-  -webkit-appearance: auto !important;
-  -moz-appearance: auto !important;
-  background-color: #020617;
-  color-scheme: dark;
-  cursor: pointer;
-  pointer-events: auto !important;
+    input[type="date"] {
+      appearance: auto !important;
+      -webkit-appearance: auto !important;
+      -moz-appearance: auto !important;
+      background-color: #020617;
+      color-scheme: dark;
+      cursor: pointer;
+      pointer-events: auto !important;
 
-  position: relative;
-  padding-right: 34px;   /* prostor za ikonu */
-}
+      position: relative;
+      padding-right: 34px;
+      /* prostor za ikonu */
+    }
 
-/* Sakrij nativni "ružni" krug u Chrome/Edge */
-input[type="date"]::-webkit-calendar-picker-indicator {
-  opacity: 0;
-  position: absolute;
-  right: 6px;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  z-index: 2;
-}
+    /* Sakrij nativni "ružni" krug u Chrome/Edge */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      opacity: 0;
+      position: absolute;
+      right: 6px;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      z-index: 2;
+    }
 
-/* Prava vidljiva ikona kalendara (emoji varijanta) */
-input[type="date"]::after {
-  content: "📅";
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 15px;
-  pointer-events: none;
-  opacity: 0.85;
-}
+    /* Prava vidljiva ikona kalendara (emoji varijanta) */
+    input[type="date"]::after {
+      content: "📅";
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 15px;
+      pointer-events: none;
+      opacity: 0.85;
+    }
 
-/* Hover efekat za bolji UX */
-input[type="date"]:hover::after {
-  opacity: 1;
-}
+    /* Hover efekat za bolji UX */
+    input[type="date"]:hover::after {
+      opacity: 1;
+    }
 
-/* Firefox fallback – samo da ostane klik */
-input[type="date"]::-moz-focus-inner {
-  border: 0;
-}
-input[type="date"]::-moz-calendar-picker-indicator {
-  cursor: pointer;
-}
+    /* Firefox fallback – samo da ostane klik */
+    input[type="date"]::-moz-focus-inner {
+      border: 0;
+    }
+
+    input[type="date"]::-moz-calendar-picker-indicator {
+      cursor: pointer;
+    }
 
 
 
@@ -882,7 +885,7 @@ input[type="date"]::-moz-calendar-picker-indicator {
               <h2><span class="emoji">🗺️</span>Legenda i slojevi</h2>
               <div class="legend-item">
                 <div class="legend-swatch swatch-all"></div>
-                <span>Sve nezgode (plavo)</span>
+                <span>Sve nezgode</span>
               </div>
               <label>
                 <input type="checkbox" id="toggle-clusters" checked>
@@ -890,19 +893,19 @@ input[type="date"]::-moz-calendar-picker-indicator {
               </label>
               <div class="legend-item">
                 <div class="legend-swatch swatch-c1"></div>
-                <span>SN u opasnom mjestu – kriterij 1 (crveno)</span>
+                <span>SN u opasnom mjestu – kriterij 1</span>
               </div>
               <div class="legend-item">
                 <div class="legend-swatch swatch-c2"></div>
-                <span>SN u opasnom mjestu – kriterij 2 (narančasto)</span>
+                <span>SN u opasnom mjestu – kriterij 2</span>
               </div>
               <div class="legend-item">
                 <div class="legend-swatch swatch-h1"></div>
-                <span>Centar opasnog mjesta – kriterij 1 (crno)</span>
+                <span>Centar opasnog mjesta – kriterij 1</span>
               </div>
               <div class="legend-item">
                 <div class="legend-swatch swatch-h2"></div>
-                <span>Centar opasnog mjesta – kriterij 2 (tamno ljubičasto)</span>
+                <span>Centar opasnog mjesta – kriterij 2</span>
               </div>
 
               <div class="toggle-row" style="margin-top:6px;">
@@ -1340,6 +1343,13 @@ input[type="date"]::-moz-calendar-picker-indicator {
     let accidentsInjury = [];
     let csvHeadersAll = [];
 
+    // Statistika klastera po kriterijima – globalno
+    const clusterStats = {
+      k1: {}, // opasna mjesta po kriteriju 1
+      k2: {}  // opasna mjesta po kriteriju 2
+    };
+
+
     let allAccidentsClusterLayer;
     let allAccidentsPlainLayer;
     let candidateAccidentsClusterLayer;
@@ -1410,8 +1420,8 @@ input[type="date"]::-moz-calendar-picker-indicator {
     const toggleClusters = document.getElementById("toggle-clusters");
 
     toggleClusters.addEventListener("change", () => {
-  setClusteringEnabled(toggleClusters.checked);
-});
+      setClusteringEnabled(toggleClusters.checked);
+    });
 
 
 
@@ -1532,28 +1542,28 @@ input[type="date"]::-moz-calendar-picker-indicator {
     }
 
     function focusAccidentFromTable(accId) {
-  const acc = accidents.find(a => a.id === accId) || accidentsAll.find(a => a.id === accId);
-  if (!acc) return;
+      const acc = accidents.find(a => a.id === accId) || accidentsAll.find(a => a.id === accId);
+      if (!acc) return;
 
-  highlightTableRow(accId);
+      highlightTableRow(accId);
 
-  const marker = accidentMarkers.get(accId);
-  if (marker) {
-    const latlng = marker.getLatLng();
-    if (allAccidentsLayer && typeof allAccidentsLayer.zoomToShowLayer === "function") {
-      // cluster mod
-      allAccidentsLayer.zoomToShowLayer(marker, () => {
-        marker.openPopup();
-      });
-    } else {
-      // plain mod – samo zumiraj i otvori popup
-      map.setView(latlng, 17);
-      marker.openPopup();
+      const marker = accidentMarkers.get(accId);
+      if (marker) {
+        const latlng = marker.getLatLng();
+        if (allAccidentsLayer && typeof allAccidentsLayer.zoomToShowLayer === "function") {
+          // cluster mod
+          allAccidentsLayer.zoomToShowLayer(marker, () => {
+            marker.openPopup();
+          });
+        } else {
+          // plain mod – samo zumiraj i otvori popup
+          map.setView(latlng, 17);
+          marker.openPopup();
+        }
+      } else {
+        map.setView([acc.lat, acc.lon], 17);
+      }
     }
-  } else {
-    map.setView([acc.lat, acc.lon], 17);
-  }
-}
 
 
     function normalizeType(str) {
@@ -1565,7 +1575,7 @@ input[type="date"]::-moz-calendar-picker-indicator {
         .trim();
     }
 
-        function getAccidentIcon(typeLabel) {
+    function getAccidentIcon(typeLabel) {
       const t = normalizeType(typeLabel);
 
       if (t.includes("pješak")) return "🚶‍♂️";
@@ -1605,44 +1615,44 @@ input[type="date"]::-moz-calendar-picker-indicator {
       return h;
     }
 
-function parseDateFlexible(str) {
-  if (!str) return null;
-  const s = str.toString().trim();
-  if (!s) return null;
+    function parseDateFlexible(str) {
+      if (!str) return null;
+      const s = str.toString().trim();
+      if (!s) return null;
 
-  // 1) ISO format koji dolazi iz <input type="date">: YYYY-MM-DD
-  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
-    const [yyyy, mm, dd] = s.split("-").map(n => parseInt(n, 10));
-    const d = new Date(yyyy, mm - 1, dd);
-    return isNaN(d.getTime()) ? null : d;
-  }
+      // 1) ISO format koji dolazi iz <input type="date">: YYYY-MM-DD
+      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+        const [yyyy, mm, dd] = s.split("-").map(n => parseInt(n, 10));
+        const d = new Date(yyyy, mm - 1, dd);
+        return isNaN(d.getTime()) ? null : d;
+      }
 
-  // 2) CSV format: DD/MM/YYYY
-  let m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
-  if (m) {
-    let day = parseInt(m[1], 10);
-    let month = parseInt(m[2], 10) - 1; // 0–11
-    let year = parseInt(m[3], 10);
-    if (year < 100) year += 2000;
-    const d = new Date(year, month, day);
-    return isNaN(d.getTime()) ? null : d;
-  }
+      // 2) CSV format: DD/MM/YYYY
+      let m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+      if (m) {
+        let day = parseInt(m[1], 10);
+        let month = parseInt(m[2], 10) - 1; // 0–11
+        let year = parseInt(m[3], 10);
+        if (year < 100) year += 2000;
+        const d = new Date(year, month, day);
+        return isNaN(d.getTime()) ? null : d;
+      }
 
-  // 3) Rezervna varijanta: DD.MM.YYYY (ako se negdje pojavi)
-  m = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$/);
-  if (m) {
-    let day = parseInt(m[1], 10);
-    let month = parseInt(m[2], 10) - 1;
-    let year = parseInt(m[3], 10);
-    if (year < 100) year += 2000;
-    const d = new Date(year, month, day);
-    return isNaN(d.getTime()) ? null : d;
-  }
+      // 3) Rezervna varijanta: DD.MM.YYYY (ako se negdje pojavi)
+      m = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$/);
+      if (m) {
+        let day = parseInt(m[1], 10);
+        let month = parseInt(m[2], 10) - 1;
+        let year = parseInt(m[3], 10);
+        if (year < 100) year += 2000;
+        const d = new Date(year, month, day);
+        return isNaN(d.getTime()) ? null : d;
+      }
 
-  // 4) Posljednja šansa – ako je ipak nešto standardno što Date razumije
-  const fallback = new Date(s);
-  return isNaN(fallback.getTime()) ? null : fallback;
-}
+      // 4) Posljednja šansa – ako je ipak nešto standardno što Date razumije
+      const fallback = new Date(s);
+      return isNaN(fallback.getTime()) ? null : fallback;
+    }
 
 
     function dbscan(points, epsMeters, minPts) {
@@ -1714,8 +1724,8 @@ function parseDateFlexible(str) {
               <div class="popup-title">
                 ${typeLabel}
                 ${a.accId != null
-                  ? `<span class="popup-id">#${a.accId}</span>`
-                  : ""}
+          ? `<span class="popup-id">#${a.accId}</span>`
+          : ""}
               </div>
               <div class="popup-subtitle">
                 ${date || "Datum nepoznat"} • ${time || "Vrijeme nepoznato"}${area ? " • " + area : ""}
@@ -1788,7 +1798,6 @@ function parseDateFlexible(str) {
             0
           );
 
-
       // tabela svih nezgoda unutar opasnog mjesta
       let accidentsTableHtml = "";
       if (cluster.accidents && cluster.accidents.length > 0) {
@@ -1800,11 +1809,11 @@ function parseDateFlexible(str) {
         <table class="haz-acc-table">
           <thead>
             <tr>
-              <th>Datum</th>
-<th>Tip SN</th>
-<th>Teško</th>
-<th>Lako</th>
-<th>Pog.</th>
+              <th>ID</th>
+              <th>Tip SN</th>
+              <th>Teže<br>povrede</th>
+              <th>Lakše<br>povrede</th>
+              <th>Poginuli</th>
             </tr>
           </thead>
           <tbody>
@@ -1812,7 +1821,16 @@ function parseDateFlexible(str) {
 
         cluster.accidents.forEach(a => {
           const r = a.raw || {};
-          const datum = (r["Datum nastanka saobraćajne nezgode"] || "").split(" ")[0];
+
+          // ➜ ID nezgode: prvo probaj a.accId, pa direktno iz raw kolona ako treba
+          const idLabel =
+            a.accId ??
+            r["R.br."] ??
+            r["R.br"] ??
+            r["Rbr"] ??
+            r["ID"] ??
+            "";
+
           const tipSn = a.typeRaw || "";
           const tesko = a.serious || 0;
           const lako = a.minor || 0;
@@ -1820,11 +1838,11 @@ function parseDateFlexible(str) {
 
           accidentsTableHtml += `
         <tr>
-          <td>${datum}</td>
-<td>${tipSn}</td>
-<td style="text-align:right;">${tesko}</td>
-<td style="text-align:right;">${lako}</td>
-<td style="text-align:right;">${pog}</td>
+          <td>${idLabel}</td>
+          <td>${tipSn}</td>
+          <td>${tesko}</td>
+          <td>${lako}</td>
+          <td>${pog}</td>
         </tr>
       `;
         });
@@ -1843,23 +1861,20 @@ function parseDateFlexible(str) {
         <div>
           <div class="popup-title">Opasno mjesto – ${kriterijLabel} #${idx + 1}</div>
           <div class="popup-subtitle">
-  ${cluster.totalAccidents} SN • Teško povr.: ${totalSerious} • Lako povr.: ${totalMinor} • Poginulih: ${totalDeaths}
-</div>
+            ${cluster.totalAccidents} SN • Teško povr.: ${totalSerious} • Lako povr.: ${totalMinor} • Poginulih: ${totalDeaths}
+          </div>
         </div>
       </div>
       <hr class="popup-separator" />
       <div class="popup-row">
         <strong>Dominantni tip SN:</strong> ${cluster.dominantType || "N/A"}
       </div>
-      <div class="popup-row">
-        <strong>Koordinate centra:</strong> ${lat.toFixed(5)}, ${lon.toFixed(5)}
-      </div>
-
+      
       ${accidentsTableHtml}
 
       <div class="popup-extra">
         Svaki red u tabeli predstavlja pojedinačnu nezgodu koja ulazi u definiciju ovog opasnog mjesta,
-        uz prikaz broja povrijeđenih i poginulih u toj saobraćajnoj nezgodi.
+        uz broj teško i lakše povrijeđenih te poginulih u toj saobraćajnoj nezgodi.
       </div>
 
       <div class="popup-footer">
@@ -1873,131 +1888,177 @@ function parseDateFlexible(str) {
   `;
     }
 
+
     function initMap() {
-  // Kreiraj mapu BEZ početnog tile layer-a
-  map = L.map("map", {
-    center: [43.86, 18.41],
-    zoom: 14
-  });
+      // Kreiraj mapu BEZ početnog tile layer-a
+      map = L.map("map", {
+        center: [43.86, 18.41],
+        zoom: 14
+      });
 
-  // 1) Klasična OSM podloga
-  baseOsmLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: "&copy; OpenStreetMap contributors"
-  });
+      // 1) Klasična OSM podloga
+      baseOsmLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap contributors"
+      });
 
-  // 2) Satelitska / ortofoto podloga (Esri World Imagery)
-  baseSatLayer = L.tileLayer(
-    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    {
-      maxZoom: 19,
-      attribution:
-        "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, " +
-        "Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+      // 2) Satelitska / ortofoto podloga (Esri World Imagery)
+      baseSatLayer = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {
+          maxZoom: 19,
+          attribution:
+            "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, " +
+            "Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+        }
+      );
+
+      // Podrazumijevana (startna) podloga – OSM
+      baseOsmLayer.addTo(map);
+
+      // PANE-ovi za administrativne granice, puteve i opasna mjesta
+      const adminPane = map.createPane("adminPane");
+      adminPane.style.zIndex = 340;
+
+      const roadsPane = map.createPane("roadsPane");
+      roadsPane.style.zIndex = 350;
+
+      const hazardPane = map.createPane("hazardPane");
+      hazardPane.style.zIndex = 650;      // > markerPane (600), < popup (700)
+      hazardPane.style.pointerEvents = "auto";
+
+      // 1) slojevi za sve nezgode
+      allAccidentsClusterLayer = L.markerClusterGroup({
+        disableClusteringAtZoom: 22,
+        spiderfyOnEveryZoom: true,
+        spiderfyDistanceMultiplier: 1.4,
+        maxClusterRadius: 40,
+        showCoverageOnHover: false
+      });
+
+      allAccidentsPlainLayer = L.layerGroup();
+
+      // 2) slojevi za kandidatske nezgode (u opasnim mjestima)
+      candidateAccidentsClusterLayer = L.markerClusterGroup({
+        disableClusteringAtZoom: 18,
+        spiderfyOnEveryZoom: true,
+        spiderfyDistanceMultiplier: 1.4,
+        maxClusterRadius: 40,
+        showCoverageOnHover: false
+      });
+
+      candidateAccidentsPlainLayer = L.layerGroup();
+
+      // podrazumijevano: clustering uključen
+      clusteringEnabled = true;
+      allAccidentsLayer = allAccidentsClusterLayer;
+      candidateAccidentsLayer = candidateAccidentsClusterLayer;
+
+      // aktivne slojeve dodamo na mapu
+      allAccidentsLayer.addTo(map);
+      candidateAccidentsLayer.addTo(map);
+
+      // centri opasnih mjesta (uvijek obični slojevi, bez klastera)
+      hazard6Layer = L.layerGroup().addTo(map);
+      hazard4Layer = L.layerGroup().addTo(map);
+
+      // Prazan sloj za puteve
+      roadsLayer = L.layerGroup();
+
+
+      // Kontrola za izbor podloge
+      const baseLayers = {
+        "OSM mapa": baseOsmLayer,
+        "Satelitski prikaz": baseSatLayer
+      };
+
+      L.control.layers(baseLayers, null, {
+        position: "topleft",
+        collapsed: true
+      }).addTo(map);
+
+      // Mjerenje i pravougaona selekcija
+      map.on("click", onMapClickMeasure);
+      map.on("mousedown", onMapMouseDown);
+      map.on("mousemove", onMapMouseMove);
+      map.on("mouseup", onMapMouseUp);
     }
-  );
-
-  // Podrazumijevana (startna) podloga – OSM
-  baseOsmLayer.addTo(map);
-
-  // PANE-ovi za administrativne granice, puteve i opasna mjesta
-  const adminPane = map.createPane("adminPane");
-  adminPane.style.zIndex = 340;
-
-  const roadsPane = map.createPane("roadsPane");
-  roadsPane.style.zIndex = 350;
-
-  const hazardPane = map.createPane("hazardPane");
-  hazardPane.style.zIndex = 650;      // > markerPane (600), < popup (700)
-  hazardPane.style.pointerEvents = "auto";
-
-// 1) slojevi za sve nezgode
-allAccidentsClusterLayer = L.markerClusterGroup({
-  disableClusteringAtZoom: 22,
-  spiderfyOnEveryZoom: true,
-  spiderfyDistanceMultiplier: 1.4,
-  maxClusterRadius: 40,
-  showCoverageOnHover: false
-});
-
-allAccidentsPlainLayer = L.layerGroup();
-
-// 2) slojevi za kandidatske nezgode (u opasnim mjestima)
-candidateAccidentsClusterLayer = L.markerClusterGroup({
-  disableClusteringAtZoom: 18,
-  spiderfyOnEveryZoom: true,
-  spiderfyDistanceMultiplier: 1.4,
-  maxClusterRadius: 40,
-  showCoverageOnHover: false
-});
-
-candidateAccidentsPlainLayer = L.layerGroup();
-
-// podrazumijevano: clustering uključen
-clusteringEnabled = true;
-allAccidentsLayer = allAccidentsClusterLayer;
-candidateAccidentsLayer = candidateAccidentsClusterLayer;
-
-// aktivne slojeve dodamo na mapu
-allAccidentsLayer.addTo(map);
-candidateAccidentsLayer.addTo(map);
-
-// centri opasnih mjesta (uvijek obični slojevi, bez klastera)
-hazard6Layer = L.layerGroup().addTo(map);
-hazard4Layer = L.layerGroup().addTo(map);
-
-// Prazan sloj za puteve
-roadsLayer = L.layerGroup();
-
-
-  // Kontrola za izbor podloge
-  const baseLayers = {
-    "OSM mapa": baseOsmLayer,
-    "Satelitski prikaz": baseSatLayer
-  };
-
-  L.control.layers(baseLayers, null, {
-    position: "topleft",
-    collapsed: true
-  }).addTo(map);
-
-  // Mjerenje i pravougaona selekcija
-  map.on("click", onMapClickMeasure);
-  map.on("mousedown", onMapMouseDown);
-  map.on("mousemove", onMapMouseMove);
-  map.on("mouseup", onMapMouseUp);
-}
 
 
     initMap();
 
 
     function setClusteringEnabled(on) {
-  clusteringEnabled = on;
+      clusteringEnabled = on;
 
-  // skloni sve varijante sa mape da ne bi bilo duplih markera
-  if (allAccidentsClusterLayer) map.removeLayer(allAccidentsClusterLayer);
-  if (candidateAccidentsClusterLayer) map.removeLayer(candidateAccidentsClusterLayer);
-  if (allAccidentsPlainLayer) map.removeLayer(allAccidentsPlainLayer);
-  if (candidateAccidentsPlainLayer) map.removeLayer(candidateAccidentsPlainLayer);
+      // skloni sve varijante sa mape da ne bi bilo duplih markera
+      if (allAccidentsClusterLayer) map.removeLayer(allAccidentsClusterLayer);
+      if (candidateAccidentsClusterLayer) map.removeLayer(candidateAccidentsClusterLayer);
+      if (allAccidentsPlainLayer) map.removeLayer(allAccidentsPlainLayer);
+      if (candidateAccidentsPlainLayer) map.removeLayer(candidateAccidentsPlainLayer);
 
-  if (clusteringEnabled) {
-    allAccidentsLayer = allAccidentsClusterLayer;
-    candidateAccidentsLayer = candidateAccidentsClusterLayer;
-  } else {
-    allAccidentsLayer = allAccidentsPlainLayer;
-    candidateAccidentsLayer = candidateAccidentsPlainLayer;
-  }
+      if (clusteringEnabled) {
+        allAccidentsLayer = allAccidentsClusterLayer;
+        candidateAccidentsLayer = candidateAccidentsClusterLayer;
+      } else {
+        allAccidentsLayer = allAccidentsPlainLayer;
+        candidateAccidentsLayer = candidateAccidentsPlainLayer;
+      }
 
-  // aktivne slojeve opet dodaj na mapu
-  if (allAccidentsLayer) allAccidentsLayer.addTo(map);
-  if (candidateAccidentsLayer) candidateAccidentsLayer.addTo(map);
+      // aktivne slojeve opet dodaj na mapu
+      if (allAccidentsLayer) allAccidentsLayer.addTo(map);
+      if (candidateAccidentsLayer) candidateAccidentsLayer.addTo(map);
 
-  // ponovo iscrtaj nezgode i opasna mjesta u aktivne slojeve
-  drawBaseAccidents();
-  drawDbscanResults();
-}
+      // ponovo iscrtaj nezgode i opasna mjesta u aktivne slojeve
+      drawBaseAccidents();
+      drawDbscanResults();
+    }
 
+
+
+
+    // Dodjela ID-eva klastera nezgodama – KRITERIJ 1
+    function annotateClustersForCriterion1(accidentsArray, clustersK1) {
+      clustersK1.forEach((cluster, idx) => {
+        const clusterId = idx + 1; // da ne počinjemo od 0
+
+        // osnovna statistika o klasteru
+        const stats = {
+          id: clusterId,
+          count: cluster.length
+          // kasnije možeš dodati centroid, godine itd.
+        };
+        clusterStats.k1[clusterId] = stats;
+
+        // svakoj nezgodi u ovom klasteru dodaj oznaku k1ClusterId
+        cluster.forEach(accIdx => {
+          const acc = accidentsArray[accIdx];
+          if (acc) {
+            acc.k1ClusterId = clusterId;
+          }
+        });
+      });
+    }
+
+    // Dodjela ID-eva klastera nezgodama – KRITERIJ 2
+    function annotateClustersForCriterion2(accidentsArray, clustersK2) {
+      clustersK2.forEach((cluster, idx) => {
+        const clusterId = idx + 1;
+
+        const stats = {
+          id: clusterId,
+          count: cluster.length
+        };
+        clusterStats.k2[clusterId] = stats;
+
+        cluster.forEach(accIdx => {
+          const acc = accidentsArray[accIdx];
+          if (acc) {
+            acc.k2ClusterId = clusterId;
+          }
+        });
+      });
+    }
 
 
     function getFilterSummaryText() {
@@ -2168,8 +2229,8 @@ roadsLayer = L.layerGroup();
 
     function drawBaseAccidents() {
       allAccidentsClusterLayer.clearLayers();
-  allAccidentsPlainLayer.clearLayers();
-  accidentMarkers.clear();
+      allAccidentsPlainLayer.clearLayers();
+      accidentMarkers.clear();
 
       const latlngs = [];
       accidents.forEach(a => {
@@ -2190,7 +2251,7 @@ roadsLayer = L.layerGroup();
         });
 
         allAccidentsLayer.addLayer(marker);
-  accidentMarkers.set(a.id, marker);
+        accidentMarkers.set(a.id, marker);
       });
 
       if (latlngs.length > 0 && !map._initialFitDone) {
@@ -2288,33 +2349,121 @@ roadsLayer = L.layerGroup();
 
 
     function drawDbscanResults() {
+      // 0) Očisti slojeve i resetuj centre
       candidateAccidentsClusterLayer.clearLayers();
-candidateAccidentsPlainLayer.clearLayers();
-hazard6Layer.clearLayers();
-hazard4Layer.clearLayers();
+      candidateAccidentsPlainLayer.clearLayers();
+      hazard6Layer.clearLayers();
+      hazard4Layer.clearLayers();
       hazardCenters6 = [];
       hazardCenters4 = [];
+
+      // 1) Reset statistike klastera
+      clusterStats.k1 = {};
+      clusterStats.k2 = {};
+
+      // 2) Sažmi klastere i popuni hazard centre + clusterStats
+
+      let clusters6 = [];
+      let clusters4 = [];
+
+      if (showH1) {
+        clusters6 = summarizeClusters(accidentsInjury, "cluster6");
+        hazardCenters6 = clusters6;
+
+        // popuni statistiku klastera za kriterij 1 (K1)
+        clusters6.forEach((cl, idx) => {
+          const displayId = idx + 1; // ono što korisnik vidi: K1-001, K1-002, ...
+          clusterStats.k1[cl.id] = {
+            id: cl.id,                  // DBSCAN ID (cluster6)
+            displayId,                  // redni broj u listi opasnih mjesta
+            count: cl.totalAccidents,   // broj nezgoda u ovom opasnom mjestu
+            totalSerious: cl.totalSerious,
+            totalMinor: cl.totalMinor,
+            totalDeaths: cl.totalDeaths,
+            centerLat: cl.centerLat,
+            centerLon: cl.centerLon
+          };
+        });
+      }
+
+      if (showH2) {
+        clusters4 = summarizeClusters(accidentsInjury, "cluster4");
+        hazardCenters4 = clusters4;
+
+        // popuni statistiku klastera za kriterij 2 (K2)
+        clusters4.forEach((cl, idx) => {
+          const displayId = idx + 1;
+          clusterStats.k2[cl.id] = {
+            id: cl.id,                  // DBSCAN ID (cluster4)
+            displayId,
+            count: cl.totalAccidents,
+            totalSerious: cl.totalSerious,
+            totalMinor: cl.totalMinor,
+            totalDeaths: cl.totalDeaths,
+            centerLat: cl.centerLat,
+            centerLon: cl.centerLon
+          };
+        });
+      }
+
+      // 3) Crtanje kandidatskih nezgoda (nezgode u opasnim mjestima)
 
       accidentsInjury.forEach(a => {
         const inC1 = showH1 && a.cluster6 && a.cluster6 > 0;
         const inC2 = showH2 && a.cluster4 && a.cluster4 > 0;
         if (!inC1 && !inC2) return;
 
+        // boja markera: crveno za K1, zeleno za K2
         let color = "#ef4444";
         let fill = "#ef4444";
-        if (!inC1 && inC2) { 
-  color = "#15803d";   // tamnija zelena ivica
-  fill  = "#22c55e";   // lijepa zelena ispuna
-}
+        if (!inC1 && inC2) {
+          color = "#15803d";   // tamnija zelena ivica
+          fill = "#22c55e";   // lijepa zelena ispuna
+        }
 
+        // pripremi dodatni HTML za popup – sada sa TAČNIM oznakama opasnih mjesta
+        const extraParts = [];
 
-        let extra = "";
-        if (inC1 && inC2) {
-          extra = "<strong>Opasno mjesto:</strong> kriterij 1 (≥ 6 SN) i kriterij 2 (≥ 4 istog tipa)";
-        } else if (inC1) {
-          extra = "<strong>Opasno mjesto:</strong> kriterij 1 (≥ 6 SN)";
-        } else if (inC2) {
-          extra = "<strong>Opasno mjesto:</strong> kriterij 2 (≥ 4 SN istog tipa)";
+        if (inC1) {
+          const info1 = clusterStats.k1[a.cluster6];
+          if (info1) {
+            const label = `K1-${String(info1.displayId).padStart(3, "0")}`;
+            extraParts.push(`
+          <div class="popup-row">
+            <strong>Opasno mjesto (kriterij 1):</strong> ${label}
+          </div>
+          <div class="popup-row">
+            Nezgoda pripada opasnom mjestu K1 sa ukupno <strong>${info1.count}</strong> SN
+            (≥ 6 SN u zadnje 3 godine na 100 m).
+          </div>
+        `);
+          }
+        }
+
+        if (inC2) {
+          const info2 = clusterStats.k2[a.cluster4];
+          if (info2) {
+            const label = `K2-${String(info2.displayId).padStart(3, "0")}`;
+            extraParts.push(`
+          <div class="popup-row">
+            <strong>Opasno mjesto (kriterij 2):</strong> ${label}
+          </div>
+          <div class="popup-row">
+            Nezgoda pripada opasnom mjestu K2 sa ukupno <strong>${info2.count}</strong> SN
+            (≥ 4 SN istog tipa u zadnje 3 godine na 100 m).
+          </div>
+        `);
+          }
+        }
+
+        let extraHtml = "";
+        if (extraParts.length > 0) {
+          extraHtml = `
+        <div class="popup-section-title" style="margin-top:6px;">
+          Opasno mjesto (DBSCAN analiza)
+        </div>
+        ${extraParts.join("")}
+      `;
         }
 
         const candMarker = L.circleMarker([a.lat, a.lon], {
@@ -2324,19 +2473,18 @@ hazard4Layer.clearLayers();
           fillOpacity: 0.95,
           weight: 1.5,
         })
-          .bindPopup(buildAccidentPopup(a, extra));
+          .bindPopup(buildAccidentPopup(a, extraHtml));
 
         candMarker.on("click", () => {
           highlightTableRow(a.id);
         });
 
         candidateAccidentsLayer.addLayer(candMarker);
-
       });
 
+      // 4) Crtanje centara opasnih mjesta (ostaje skoro isto kao kod tebe)
+
       if (showH1) {
-        const clusters6 = summarizeClusters(accidentsInjury, "cluster6");
-        hazardCenters6 = clusters6;
         clusters6.forEach((cl, idx) => {
           L.circleMarker([cl.centerLat, cl.centerLon], {
             pane: "hazardPane",
@@ -2352,8 +2500,6 @@ hazard4Layer.clearLayers();
       }
 
       if (showH2) {
-        const clusters4 = summarizeClusters(accidentsInjury, "cluster4");
-        hazardCenters4 = clusters4;
         clusters4.forEach((cl, idx) => {
           L.circleMarker([cl.centerLat, cl.centerLon], {
             pane: "hazardPane",
@@ -2368,12 +2514,10 @@ hazard4Layer.clearLayers();
         });
       }
 
-      // ============================================
-      // ➤ RJEŠENJE 1: hazard slojevi uvijek na vrhu
-      // ============================================
-
+      // ažuriraj "skoči na" listu (općine + opasna mjesta)
       rebuildJumpOptions();
     }
+
 
 
     function updateHeatmap() {
@@ -3270,11 +3414,11 @@ hazard4Layer.clearLayers();
           const rawType = row["Vrsta, tip saobraćajne nezgode"] || "";
           const typeKey = normalizeType(rawType);
           const accId =
-          row["R.br."] ??
-          row["R.br"] ??
-          row["Rbr"] ??
-          row["ID"] ??
-          (idx + 1);
+            row["R.br."] ??
+            row["R.br"] ??
+            row["Rbr"] ??
+            row["ID"] ??
+            (idx + 1);
 
           // umjesto starog dijela sa deaths/serious/minor/injuryTotal
           const deaths = Number(row["Broj poginulih osoba"] ?? 0);
@@ -3515,12 +3659,3 @@ hazard4Layer.clearLayers();
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
