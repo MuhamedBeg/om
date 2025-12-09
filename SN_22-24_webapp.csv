@@ -650,7 +650,7 @@
 649,43.810503,18.310251,Lokalna cesta,05/11/2022,13:30:00,Kiša,Dan,Mokar,0,1,0,Udar prednjim dijelom vozila,Urbano,Jednosmjerna cesta,Pravac,Ne,Bez raskrsnice,Bez prelaza,Ne,Da,0,0,1,0,2,,,,,1,,,,
 650,43.83228,18.30636,Magistralna cesta,17/11/2022,15:05:00,Vedro,Dan,Suh,0,1,0,Udar prednjim dijelom vozila,Urbano,Dvosmjerna cesta,Pravac,Ne,Bez raskrsnice,Bez prelaza,Ne,Da,0,0,1,0,1,,,,1,,,,,
 651,43.7959,18.32068,Regionalna cesta,21/11/2022,12:20:00,Oblačno,Dan,Suh,0,1,0,Udar prednjim dijelom vozila,Urbano,Dvosmjerna cesta,Pravac,Ne,Bez raskrsnice,Bez prelaza,Ne,Da,0,0,1,0,3,,,,,,,,,
-652,43.83189,18.30809,Lokalna cesta,24/11/2022,08:40:00,Oblačno,Dan,Suh,0,1,0,Bočni udar tramvaja sa pješakom,Urbano,Dvosmjerna cesta,Pravac,Ne,Kružni tok,Pješački prelaz,Ne,Da,0,0,1,0,,,,,,,,,,
+652,43.83189,18.30809,Lokalna cesta,24/11/2022,08:40:00,Oblačno,Dan,Suh,0,1,0,Bočni udar tramvaja sa pješakom,Urbano,Dvosmjerna cesta,Pravac,Ne,Kružni tok,Pješački prelaz,Ne,Da,0,0,1,0,,,,,,,,,,
 653,43.82217,18.30698,Lokalna cesta,30/11/2022,11:50:00,Kiša,Dan,Mokar,0,1,0,Udar u pješaka,Urbano,Dvosmjerna cesta,Pravac,Ne,Bez raskrsnice,Pješački prelaz,Da,Da,0,0,1,0,1,,,,,,,,,
 654,43.83206,18.32354,Lokalna cesta,26/12/2022,15:10:00,Oblačno,Dan,Suh,0,0,1,Udar u pješaka,Urbano,Dvosmjerna cesta,Pravac,Ne,Bez raskrsnice,Bez prelaza,Ne,Da,0,0,0,0,1,,,,,,,,,
 655,43.84811,18.3134,Regionalna cesta,06/01/2023,18:20:00,Vedro,Noć,Suh,0,1,0,Udar u pješaka,Urbano,Dvosmjerna cesta,Pravac,Ne,Bez raskrsnice,Bez prelaza,Ne,Da,0,0,1,0,1,,,,,,,,,
@@ -808,5 +808,6 @@
 807,43.833767,18.31212,Lokalna cesta,21/12/2023,23:35:00,Kiša,Noć,Mokar,0,0,3,Udar prednjim dijelom vozila,Urbano,Dvosmjerna cesta,Pravac,Ne,Trokraka raskrsnica,Pješački prelaz,Da,Da,0,0,3,0,1,,,,,,,,,
 808,43.860605,18.420354,Lokalna cesta,22/12/2023,14:15:00,Vedro,Dan,Suh,0,0,1,Udar u pješaka,Urbano,Dvosmjerna cesta,Krivina,Da,Četverokraka raskrsnica,U blizini pješačkog prelaza,Da,Da,0,0,1,0,1,1,,,,,,,,
 809,43.840684,18.337962,Lokalna cesta,28/12/2023,11:10:00,Kiša,Dan,Mokar,0,0,1,Udar u pješaka,Urbano,Dvosmjerna cesta,Pravac,Ne,Trokraka raskrsnica,Pješački prelaz,Da,Da,0,0,1,0,1,1,,,,,,,,
+
 
 
