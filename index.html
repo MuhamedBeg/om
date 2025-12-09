@@ -2779,36 +2779,36 @@ dioDanaLabels.forEach((lab, i) =>
 
       injLabels.forEach((lab, i) => summary.push({ group: "Povrede/poginuli", label: lab, value: injData[i] }));
 
-      const partBuckets = { "0": 0, "1": 0, "2": 0, "3": 0, "4": 0, "5+": 0 };
+const partBuckets = { "1": 0, "2": 0, "3": 0, "4": 0, "5+": 0 };
 
 acc.forEach(a => {
-  const c = a.participantsCount || 0;
-  if (c <= 0) partBuckets["0"]++;
-  else if (c === 1) partBuckets["1"]++;
+  const c = a.participantsCount ?? 0;
+
+  if (c === 1) partBuckets["1"]++;
   else if (c === 2) partBuckets["2"]++;
   else if (c === 3) partBuckets["3"]++;
   else if (c === 4) partBuckets["4"]++;
-  else partBuckets["5+"]++;
+  else if (c >= 5) partBuckets["5+"]++;
+  // ako je c <= 0 – jednostavno ga ignorišemo, ne ide ni u jedan bucket
 });
 
-// 👉 napravi liste za graf, ali preskoči bucket "0" ako je 0
+// napravi liste za graf, ali uzmi samo kategorije koje imaju bar 1 nezgodu
 const partLabels = [];
 const partData = [];
 
 Object.entries(partBuckets).forEach(([label, value]) => {
-  // ako želiš da se uklanja samo "0" kada je 0:
-  if (label === "0" && value === 0) return;
+  if (value === 0) return;   // preskoči prazne kategorije
 
   partLabels.push(label);
   partData.push(value);
 
-  // upiši i u summary
   summary.push({
     group: "Broj učesnika",
     label,
     value
   });
 });
+
 
 
       const vehTotals = {};
@@ -3698,4 +3698,5 @@ if (row["Period dana"] != null) {
 </body>
 
 </html>
+
 
