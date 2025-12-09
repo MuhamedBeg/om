@@ -1238,6 +1238,8 @@
         <button class="stats-metric-btn active" data-metric="tip">Tip nezgode</button>
         <button class="stats-metric-btn" data-metric="dow">Dan u sedmici</button>
         <button class="stats-metric-btn" data-metric="hour">Sat u danu</button>
+        <button class="stats-metric-btn" data-metric="month">Mjeseci</button>
+        <button class="stats-metric-btn" data-metric="yearTrend">Trend po godinama</button>
         <button class="stats-metric-btn" data-metric="tipputa">Tip puta</button>
         <button class="stats-metric-btn" data-metric="katputa">Kat. puta</button>
         <button class="stats-metric-btn" data-metric="diodana">Period dana</button>
@@ -1245,6 +1247,16 @@
         <button class="stats-metric-btn" data-metric="povrede">Povrede/poginuli</button>
         <button class="stats-metric-btn" data-metric="ucesnici">Broj učesnika</button>
         <button class="stats-metric-btn" data-metric="vozila">Vrste vozila</button>
+
+  <button class="stats-metric-btn" data-metric="vremenske">Vremenske prilike</button>
+  <button class="stats-metric-btn" data-metric="podrucje">Područje</button>
+  <button class="stats-metric-btn" data-metric="horiz">Horiz. geometrija</button>
+  <button class="stats-metric-btn" data-metric="vert">Vert. geometrija</button>
+  <button class="stats-metric-btn" data-metric="raskrsnica">Tip raskrsnice</button>
+  <button class="stats-metric-btn" data-metric="prelaz">Tip prelaza</button>
+  <button class="stats-metric-btn" data-metric="pjesaci">Pješačka površina</button>
+  <button class="stats-metric-btn" data-metric="rasvjeta">Rasvjeta</button>
+
       </div>
 
       <div id="stats-chart-container">
@@ -2707,6 +2719,52 @@
         if (a.dowIndex == null) return;
         dowCounts[a.dowIndex - 1]++;
       });
+            // Mjeseci i godišnji trend
+      const monthNames = [
+        "Januar", "Februar", "Mart", "April", "Maj", "Juni",
+        "Juli", "August", "Septembar", "Oktobar", "Novembar", "Decembar"
+      ];
+      const monthCounts = new Array(12).fill(0);
+
+      const yearMap = {}; // {2022: {count, serious, minor, deaths}, ...}
+
+      acc.forEach(a => {
+        if (!a.dateObj) return;
+
+        const m = a.dateObj.getMonth();  // 0–11
+        monthCounts[m]++;
+
+        const y = a.dateObj.getFullYear();
+        if (!yearMap[y]) {
+          yearMap[y] = { count: 0, serious: 0, minor: 0, deaths: 0 };
+        }
+        yearMap[y].count++;
+        yearMap[y].serious += a.serious || 0;
+        yearMap[y].minor   += a.minor   || 0;
+        yearMap[y].deaths  += a.deaths  || 0;
+      });
+
+      const monthLabels = monthNames;
+      const monthData   = monthCounts;
+
+      monthLabels.forEach((lab, i) => {
+        summary.push({ group: "Mjesec nastanka nezgode", label: lab, value: monthData[i] });
+      });
+
+      const yearLabels  = Object.keys(yearMap).sort();
+      const yearCounts  = yearLabels.map(y => yearMap[y].count);
+      const yearSerious = yearLabels.map(y => yearMap[y].serious);
+      const yearMinor   = yearLabels.map(y => yearMap[y].minor);
+      const yearDeaths  = yearLabels.map(y => yearMap[y].deaths);
+
+      yearLabels.forEach((lab, i) => {
+        summary.push({
+          group: "Trend po godinama – broj nezgoda",
+          label: lab,
+          value: yearCounts[i]
+        });
+      });
+
       const dowLabels = DOW_NAMES.slice(1);
       dowLabels.forEach((lab, i) => summary.push({ group: "Dan u sedmici", label: lab, value: dowCounts[i] }));
 
@@ -2760,6 +2818,15 @@ dioDanaLabels.forEach((lab, i) =>
       const tipPuta = cat("Tip puta", "Tip puta");
       const katPuta = cat("Kategorija saobraćajnice", "Kategorija saobraćajnice");
       const kolovoz = cat("Stanje kolovoza", "Stanje kolovoza");
+      const vremenske     = cat("Vremenske prilike", "Vremenske prilike");
+      const podrucje      = cat("Područje", "Područje");
+      const horizGeo      = cat("Horizontalna geometrija", "Horizontalna geometrija");
+      const vertGeo       = cat("Vertikalna geometrija", "Vertikalna geometrija");
+      const tipRaskrsnice = cat("Tip raskrsnice", "Tip raskrsnice");
+      const tipPrelaza    = cat("Tip prelaza", "Tip prelaza");
+      const pjesPovrsina  = cat("Pješačka površina", "Pješačka površina");
+      const rasvjeta      = cat("Rasvjeta", "Rasvjeta");
+
 
       let sumDeaths = 0, sumSerious = 0, sumMinor = 0, sumInj = 0;
       acc.forEach(a => {
@@ -2822,48 +2889,239 @@ Object.entries(partBuckets).forEach(([label, value]) => {
       const vehData = vehLabels.map(k => vehTotals[k]);
       vehLabels.forEach((lab, i) => summary.push({ group: "Vrste vozila/učesnika", label: lab, value: vehData[i] }));
 
-      return {
+            return {
         typeLabels, typeData,
         dowLabels, dowData: dowCounts,
         hourLabels, hourData: hourCounts,
+        // novi mjeseci
+        monthLabels, monthData,
+        // novi godišnji trend
+        yearLabels, yearCounts, yearSerious, yearMinor, yearDeaths,
+        // dan/noć
         dioDanaLabels, dioDanaData,
+        // postojeće kategorije puta
         tipPutaLabels: tipPuta.labels, tipPutaData: tipPuta.data,
         katPutaLabels: katPuta.labels, katPutaData: katPuta.data,
         kolovozLabels: kolovoz.labels, kolovozData: kolovoz.data,
+        // nove kategorije:
+        vremenskeLabels:     vremenske.labels,     vremenskeData:     vremenske.data,
+        podrucjeLabels:      podrucje.labels,      podrucjeData:      podrucje.data,
+        horizGeoLabels:      horizGeo.labels,      horizGeoData:      horizGeo.data,
+        vertGeoLabels:       vertGeo.labels,       vertGeoData:       vertGeo.data,
+        tipRaskrsniceLabels: tipRaskrsnice.labels, tipRaskrsniceData: tipRaskrsnice.data,
+        tipPrelazaLabels:    tipPrelaza.labels,    tipPrelazaData:    tipPrelaza.data,
+        pjesPovrsinaLabels:  pjesPovrsina.labels,  pjesPovrsinaData:  pjesPovrsina.data,
+        rasvjetaLabels:      rasvjeta.labels,      rasvjetaData:      rasvjeta.data,
+        // povrede, učesnici, vozila
         injLabels, injData,
         partLabels, partData,
         vehLabels, vehData,
+        // kompletan summary za export
         summary
       };
     }
 
+   
+    
     function renderStatsChart(metricKey) {
       if (!statsDataCache) return;
       const s = statsDataCache;
-      let labels = [], data = [], type = "bar", label = "Broj nezgoda";
 
-      if (metricKey === "tip") { labels = s.typeLabels; data = s.typeData; label = "Broj nezgoda po tipu"; }
-      else if (metricKey === "dow") { labels = s.dowLabels; data = s.dowData; label = "Nezgode po danu u sedmici"; }
-      else if (metricKey === "hour") { labels = s.hourLabels; data = s.hourData; type = "line"; label = "Nezgode po satu"; }
-      else if (metricKey === "tipputa") { labels = s.tipPutaLabels; data = s.tipPutaData; label = "Nezgode po tipu puta"; }
-      else if (metricKey === "katputa") { labels = s.katPutaLabels; data = s.katPutaData; label = "Nezgode po kategoriji puta"; }
-      else if (metricKey === "diodana") { labels = s.dioDanaLabels; data = s.dioDanaData; type = "pie"; label = "Period dana"; }
-      else if (metricKey === "kolovoz") { labels = s.kolovozLabels; data = s.kolovozData; type = "pie"; label = "Stanje kolovoza"; }
-      else if (metricKey === "povrede") { labels = s.injLabels; data = s.injData; label = "Povrede i poginuli"; }
-      else if (metricKey === "ucesnici") { labels = s.partLabels; data = s.partData; label = "Broj učesnika"; }
-      else if (metricKey === "vozila") { labels = s.vehLabels; data = s.vehData; label = "Vrste vozila/učesnika"; }
+      let labels = [];
+      let datasets = [];
+      let type = "bar";   // podrazumijevano
+
+      // ------------- ODABIR PODATAKA PO METRICI -------------
+
+      if (metricKey === "tip") {
+        labels = s.typeLabels;
+        datasets = [{
+          label: "Broj nezgoda po tipu",
+          data: s.typeData
+        }];
+
+      } else if (metricKey === "dow") {
+        labels = s.dowLabels;
+        datasets = [{
+          label: "Nezgode po danu u sedmici",
+          data: s.dowData
+        }];
+
+      } else if (metricKey === "hour") {
+        labels = s.hourLabels;
+        type = "line";
+        datasets = [{
+          label: "Nezgode po satu u danu",
+          data: s.hourData
+        }];
+
+      // --- NOVO: mjeseci ---
+      } else if (metricKey === "month") {
+        labels = s.monthLabels;
+        datasets = [{
+          label: "Nezgode po mjesecima",
+          data: s.monthData
+        }];
+
+      // --- NOVO: trend po godinama (više serija) ---
+      } else if (metricKey === "yearTrend") {
+        labels = s.yearLabels;
+        type = "line";
+        datasets = [
+          {
+            label: "Ukupno nezgoda",
+            data: s.yearCounts,
+            borderWidth: 2,
+            tension: 0.25,
+            fill: false
+          },
+          {
+            label: "Teško povrijeđeni",
+            data: s.yearSerious,
+            borderWidth: 2,
+            tension: 0.25,
+            fill: false
+          },
+          {
+            label: "Lako povrijeđeni",
+            data: s.yearMinor,
+            borderWidth: 2,
+            tension: 0.25,
+            fill: false
+          },
+          {
+            label: "Smrtno stradali",
+            data: s.yearDeaths,
+            borderWidth: 2,
+            tension: 0.25,
+            fill: false
+          }
+        ];
+
+      } else if (metricKey === "tipputa") {
+        labels = s.tipPutaLabels;
+        datasets = [{
+          label: "Nezgode po tipu puta",
+          data: s.tipPutaData
+        }];
+
+      } else if (metricKey === "katputa") {
+        labels = s.katPutaLabels;
+        datasets = [{
+          label: "Nezgode po kategoriji puta",
+          data: s.katPutaData
+        }];
+
+      } else if (metricKey === "diodana") {
+        labels = s.dioDanaLabels;
+        type = "pie";
+        datasets = [{
+          label: "Dan / Noć",
+          data: s.dioDanaData
+        }];
+
+      } else if (metricKey === "kolovoz") {
+        labels = s.kolovozLabels;
+        type = "pie";
+        datasets = [{
+          label: "Stanje kolovoza",
+          data: s.kolovozData
+        }];
+
+      // --- NOVO: vremenske, područje, geometrije, raskrsnice, prelazi, pješ. površina, rasvjeta ---
+      } else if (metricKey === "vremenske") {
+        labels = s.vremenskeLabels;
+        datasets = [{
+          label: "Nezgode po vremenskim prilikama",
+          data: s.vremenskeData
+        }];
+
+      } else if (metricKey === "podrucje") {
+        labels = s.podrucjeLabels;
+        datasets = [{
+          label: "Nezgode po području",
+          data: s.podrucjeData
+        }];
+
+      } else if (metricKey === "horiz") {
+        labels = s.horizGeoLabels;
+        datasets = [{
+          label: "Horizontalna geometrija",
+          data: s.horizGeoData
+        }];
+
+      } else if (metricKey === "vert") {
+        labels = s.vertGeoLabels;
+        datasets = [{
+          label: "Vertikalna geometrija",
+          data: s.vertGeoData
+        }];
+
+      } else if (metricKey === "raskrsnica") {
+        labels = s.tipRaskrsniceLabels;
+        datasets = [{
+          label: "Tip raskrsnice",
+          data: s.tipRaskrsniceData
+        }];
+
+      } else if (metricKey === "prelaz") {
+        labels = s.tipPrelazaLabels;
+        datasets = [{
+          label: "Tip prelaza",
+          data: s.tipPrelazaData
+        }];
+
+      } else if (metricKey === "pjesaci") {
+        labels = s.pjesPovrsinaLabels;
+        datasets = [{
+          label: "Pješačka površina",
+          data: s.pjesPovrsinaData
+        }];
+
+      } else if (metricKey === "rasvjeta") {
+        labels = s.rasvjetaLabels;
+        datasets = [{
+          label: "Rasvjeta",
+          data: s.rasvjetaData
+        }];
+
+      } else if (metricKey === "povrede") {
+        labels = s.injLabels;
+        datasets = [{
+          label: "Povrede i poginuli",
+          data: s.injData
+        }];
+
+      } else if (metricKey === "ucesnici") {
+        labels = s.partLabels;
+        datasets = [{
+          label: "Broj učesnika",
+          data: s.partData
+        }];
+
+      } else if (metricKey === "vozila") {
+        labels = s.vehLabels;
+        datasets = [{
+          label: "Vrste vozila/učesnika",
+          data: s.vehData
+        }];
+      }
+
+      // ------------- KREIRANJE GRAFA -------------
 
       if (statsChart) statsChart.destroy();
       const ctx = document.getElementById("stats-chart").getContext("2d");
 
       if (type === "pie") {
+        const ds = datasets[0] || { label: "", data: [] };
+
         statsChart = new Chart(ctx, {
           type: "pie",
           data: {
             labels,
             datasets: [{
-              label,
-              data,
+              label: ds.label,
+              data: ds.data,
               backgroundColor: [
                 "rgba(248,113,113,0.8)",
                 "rgba(251,146,60,0.8)",
@@ -2879,37 +3137,60 @@ Object.entries(partBuckets).forEach(([label, value]) => {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              legend: { position: "bottom", labels: { color: "#e5e7eb", font: { size: 11 } } }
+              legend: {
+                position: "bottom",
+                labels: { color: "#e5e7eb", font: { size: 11 } }
+              }
             }
           }
         });
+
       } else {
+        // bar ili line – može imati više serija (npr. trend po godinama)
         statsChart = new Chart(ctx, {
           type,
           data: {
             labels,
-            datasets: [{
-              label,
-              data,
-              borderWidth: 1,
-              backgroundColor: type === "line"
-                ? "rgba(248,113,113,0.3)"
-                : "rgba(248,113,113,0.8)",
-              borderColor: "rgba(248,113,113,1)"
-            }]
+            datasets: datasets.map((ds, i) => ({
+              ...ds,
+              borderColor: ds.borderColor || [
+                "rgba(248,113,113,1)",
+                "rgba(251,191,36,1)",
+                "rgba(59,130,246,1)",
+                "rgba(139,92,246,1)"
+              ][i] || "rgba(248,113,113,1)",
+              backgroundColor: ds.backgroundColor || (
+                type === "line"
+                  ? "rgba(248,113,113,0.3)"
+                  : "rgba(248,113,113,0.8)"
+              ),
+              borderWidth: ds.borderWidth || 1,
+              tension: ds.tension != null ? ds.tension : (type === "line" ? 0.25 : 0)
+            }))
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-              x: { ticks: { color: "#e5e7eb", font: { size: 10 } }, grid: { color: "#111827" } },
-              y: { beginAtZero: true, ticks: { color: "#e5e7eb" }, grid: { color: "#111827" } }
+              x: {
+                ticks: { color: "#e5e7eb", font: { size: 10 } },
+                grid: { color: "#111827" }
+              },
+              y: {
+                beginAtZero: true,
+                ticks: { color: "#e5e7eb" },
+                grid: { color: "#111827" }
+              }
             },
-            plugins: { legend: { display: false } }
+            plugins: {
+              legend: { display: datasets.length > 1 }  // npr. za trend po godinama
+            }
           }
         });
       }
     }
+
+
 
     function openStatsModal() {
       const stats = computeStats();
