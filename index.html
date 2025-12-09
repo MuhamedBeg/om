@@ -1030,7 +1030,7 @@
                   <input type="number" id="filter-hour-to" min="0" max="23" placeholder="">
                 </div>
                 <div class="filter-group filter-full">
-                  <label for="filter-daynight">Dan / Noć (prema vremenu nezgode)</label>
+                  <label for="filter-daynight">Period dana</label>
                   <select id="filter-daynight">
                     <option value="">(oba)</option>
                     <option value="Dan">Dan</option>
@@ -2670,6 +2670,11 @@
         });
       }
 
+      if (fDayNight) {
+  fDayNight.innerHTML = '<option value="">Svi periodi</option>';
+  fillSelect(fDayNight, collectUnique("Period dana"));
+}
+
       fillSelect(fPodrucje, collectUnique("Područje"));
       fillSelect(fTipPuta, collectUnique("Tip puta"));
       fillSelect(fKatPuta, collectUnique("Kategorija saobraćajnice"));
@@ -2718,14 +2723,26 @@
       });
       hourLabels.forEach((lab, i) => summary.push({ group: "Sat u danu", label: lab, value: hourCounts[i] }));
 
-      const dayNightCounts = { "Dan": 0, "Noć": 0 };
-      acc.forEach(a => {
-        const dn = a.dayNight || "Dan";
-        dayNightCounts[dn] = (dayNightCounts[dn] || 0) + 1;
-      });
-      const dioDanaLabels = Object.keys(dayNightCounts);
-      const dioDanaData = dioDanaLabels.map(k => dayNightCounts[k]);
-      dioDanaLabels.forEach((lab, i) => summary.push({ group: "Dan / Noć", label: lab, value: dioDanaData[i] }));
+      // Statistika po periodu dana – direktno iz kolone "Period dana"
+const dayNightCounts = {};
+acc.forEach(a => {
+  // a.dayNight je upravo ono što piše u "Period dana"
+  let dn = a.dayNight;
+  if (!dn) {
+    // sigurnosna mreža – ako je null, probaj direktno iz raw
+    dn = (a.raw["Period dana"] || "").toString().trim();
+  }
+  if (!dn) dn = "Nepoznato";
+  dayNightCounts[dn] = (dayNightCounts[dn] || 0) + 1;
+});
+
+const dioDanaLabels = Object.keys(dayNightCounts).sort();
+const dioDanaData = dioDanaLabels.map(k => dayNightCounts[k]);
+
+dioDanaLabels.forEach((lab, i) =>
+  summary.push({ group: "Period dana", label: lab, value: dioDanaData[i] })
+);
+
 
       function cat(colName, groupName) {
         const m = {};
@@ -2812,7 +2829,7 @@
       else if (metricKey === "hour") { labels = s.hourLabels; data = s.hourData; type = "line"; label = "Nezgode po satu"; }
       else if (metricKey === "tipputa") { labels = s.tipPutaLabels; data = s.tipPutaData; label = "Nezgode po tipu puta"; }
       else if (metricKey === "katputa") { labels = s.katPutaLabels; data = s.katPutaData; label = "Nezgode po kategoriji puta"; }
-      else if (metricKey === "diodana") { labels = s.dioDanaLabels; data = s.dioDanaData; type = "pie"; label = "Dan / Noć"; }
+      else if (metricKey === "diodana") { labels = s.dioDanaLabels; data = s.dioDanaData; type = "pie"; label = "Period dana"; }
       else if (metricKey === "kolovoz") { labels = s.kolovozLabels; data = s.kolovozData; type = "pie"; label = "Stanje kolovoza"; }
       else if (metricKey === "povrede") { labels = s.injLabels; data = s.injData; label = "Povrede i poginuli"; }
       else if (metricKey === "ucesnici") { labels = s.partLabels; data = s.partData; label = "Broj učesnika"; }
@@ -3458,11 +3475,15 @@
           }
 
           const timeStr = row["Vrijeme nastanka saobraćajne nezgode"] || "";
-          const hour = extractHourFromTimeStr(timeStr);
-          let dayNight = "Dan";
-          if (hour !== null) {
-            dayNight = (hour >= 6 && hour < 18) ? "Dan" : "Noć";
-          }
+const hour = extractHourFromTimeStr(timeStr);
+
+// Uzimamo vrijednost DIREKTNO iz kolone "Period dana"
+let dayNight = null;
+if (row["Period dana"] != null) {
+  dayNight = row["Period dana"].toString().trim();
+  if (dayNight === "") dayNight = null;
+}
+
 
           accidentsAll.push({
             id: idx,
@@ -3659,4 +3680,3 @@
 </body>
 
 </html>
-
