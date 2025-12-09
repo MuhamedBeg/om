@@ -1240,7 +1240,7 @@
         <button class="stats-metric-btn" data-metric="hour">Sat u danu</button>
         <button class="stats-metric-btn" data-metric="tipputa">Tip puta</button>
         <button class="stats-metric-btn" data-metric="katputa">Kat. puta</button>
-        <button class="stats-metric-btn" data-metric="diodana">Dan / Noć</button>
+        <button class="stats-metric-btn" data-metric="diodana">Period dana</button>
         <button class="stats-metric-btn" data-metric="kolovoz">Stanje kolovoza</button>
         <button class="stats-metric-btn" data-metric="povrede">Povrede/poginuli</button>
         <button class="stats-metric-btn" data-metric="ucesnici">Broj učesnika</button>
@@ -2779,6 +2779,7 @@ dioDanaLabels.forEach((lab, i) =>
 
       injLabels.forEach((lab, i) => summary.push({ group: "Povrede/poginuli", label: lab, value: injData[i] }));
 
+// Broj učesnika – bez kategorije "0"
 const partBuckets = { "1": 0, "2": 0, "3": 0, "4": 0, "5+": 0 };
 
 acc.forEach(a => {
@@ -2808,7 +2809,6 @@ Object.entries(partBuckets).forEach(([label, value]) => {
     value
   });
 });
-
 
 
       const vehTotals = {};
@@ -3698,5 +3698,3 @@ if (row["Period dana"] != null) {
 </body>
 
 </html>
-
-
