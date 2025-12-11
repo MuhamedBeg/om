@@ -819,6 +819,48 @@
       cursor: pointer;
     }
 
+    #stats-chart-container {
+      background: #ffffff;
+      /* bijela pozadina oko grafa */
+    }
+
+    #stats-chart {
+      background-color: #ffffff;
+      /* dodatno – ako browser koristi CSS pozadinu */
+    }
+
+    .participant-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .participant-chip {
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .participant-chip:hover {
+      background: #111827;
+      border-color: #4b5563;
+      transform: translateY(-1px);
+    }
+
+    .participant-chip.active {
+      background: #f97316;
+      border-color: #fb923c;
+      color: #111827;
+    }
 
 
 
@@ -1135,10 +1177,32 @@
                   <label for="filter-max-mrtvi">Maks. poginulih</label>
                   <input type="number" id="filter-max-mrtvi" min="0">
                 </div>
+                <!-- SKRIVENI input ostavljamo zbog postojećeg JS koda, ali ga ne koristimo više -->
+                <input type="hidden" id="filter-uc" />
+
                 <div class="filter-group filter-full">
-                  <label for="filter-uc">Učesnici (tekst)</label>
-                  <input type="text" id="filter-uc" placeholder="npr. pješak, bicikl...">
+                  <label>Učesnici (klikni ikonicu za filter)</label>
+
+                  <div id="participants-filter" class="participant-filter">
+
+                    <button type="button" class="participant-chip" data-cat="Putnički automobil"
+                      title="Putnički automobil">🚗</button>
+                    <button type="button" class="participant-chip" data-cat="Pješak" title="Pješak">🚶‍♂️</button>
+                    <button type="button" class="participant-chip" data-cat="Bicikl" title="Bicikl">🚴</button>
+                    <button type="button" class="participant-chip" data-cat="Motocikl" title="Motocikl">🏍️</button>
+                    <button type="button" class="participant-chip" data-cat="Lako teretno vozilo"
+                      title="Lako teretno vozilo">🚚</button>
+                    <button type="button" class="participant-chip" data-cat="Teško teretno vozilo"
+                      title="Teško teretno vozilo">🚛</button>
+                    <button type="button" class="participant-chip" data-cat="Autobus" title="Autobus">🚌</button>
+                    <button type="button" class="participant-chip" data-cat="Traktor" title="Traktor">🚜</button>
+                    <button type="button" class="participant-chip" data-cat="Romobil" title="Romobil">🛴</button>
+                    <button type="button" class="participant-chip" data-cat="Ostalo" title="Ostalo">❔</button>
+
+                  </div>
                 </div>
+
+
               </div>
 
               <div class="btn-row">
@@ -1248,14 +1312,14 @@
         <button class="stats-metric-btn" data-metric="ucesnici">Broj učesnika</button>
         <button class="stats-metric-btn" data-metric="vozila">Vrste vozila</button>
 
-  <button class="stats-metric-btn" data-metric="vremenske">Vremenske prilike</button>
-  <button class="stats-metric-btn" data-metric="podrucje">Područje</button>
-  <button class="stats-metric-btn" data-metric="horiz">Horiz. geometrija</button>
-  <button class="stats-metric-btn" data-metric="vert">Vert. geometrija</button>
-  <button class="stats-metric-btn" data-metric="raskrsnica">Tip raskrsnice</button>
-  <button class="stats-metric-btn" data-metric="prelaz">Tip prelaza</button>
-  <button class="stats-metric-btn" data-metric="pjesaci">Pješačka površina</button>
-  <button class="stats-metric-btn" data-metric="rasvjeta">Rasvjeta</button>
+        <button class="stats-metric-btn" data-metric="vremenske">Vremenske prilike</button>
+        <button class="stats-metric-btn" data-metric="podrucje">Područje</button>
+        <button class="stats-metric-btn" data-metric="horiz">Horiz. geometrija</button>
+        <button class="stats-metric-btn" data-metric="vert">Vert. geometrija</button>
+        <button class="stats-metric-btn" data-metric="raskrsnica">Tip raskrsnice</button>
+        <button class="stats-metric-btn" data-metric="prelaz">Tip prelaza</button>
+        <button class="stats-metric-btn" data-metric="pjesaci">Pješačka površina</button>
+        <button class="stats-metric-btn" data-metric="rasvjeta">Rasvjeta</button>
 
       </div>
 
@@ -1435,6 +1499,9 @@
       setClusteringEnabled(toggleClusters.checked);
     });
 
+
+    const participantFilterEl = document.getElementById("participant-filter");
+    const selectedParticipants = new Set();
 
 
 
@@ -2563,8 +2630,27 @@
       }
     }
 
+    const participantChips = document.querySelectorAll(".participant-chip");
+
+    participantChips.forEach(chip => {
+      chip.addEventListener("click", () => {
+        const cat = chip.dataset.cat;   // npr. "Pješak", "Autobus"...
+
+        // toggle vizuelnog stanja
+        const isActive = chip.classList.toggle("active");
+
+        if (isActive) {
+          selectedParticipants.add(cat);     // ➜ klik = uključi kategoriju
+        } else {
+          selectedParticipants.delete(cat);  // ➜ ponovni klik = isključi
+        }
+
+        applyFiltersAndRunDbscan();
+      });
+    });
 
     function applyFiltersAndRunDbscan() {
+      // --- 1) Pročitaj vrijednosti filtera ---
       const dateFrom = fDateFrom.value ? new Date(fDateFrom.value) : null;
       const dateTo = fDateTo.value ? new Date(fDateTo.value) : null;
       const dowVal = fDow.value ? parseInt(fDow.value, 10) : null;
@@ -2572,14 +2658,18 @@
       const hTo = fHourTo.value !== "" ? Number(fHourTo.value) : null;
       const dnVal = fDayNight.value || null;
 
+      // --- 2) Filtriraj nezgode ---
       accidents = accidentsAll.filter(a => {
+        // Datum
         if (dateFrom && (!a.dateObj || a.dateObj < dateFrom)) return false;
         if (dateTo && (!a.dateObj || a.dateObj > dateTo)) return false;
 
+        // Dan u sedmici
         if (dowVal !== null) {
           if (a.dowIndex == null || a.dowIndex !== dowVal) return false;
         }
 
+        // Sat
         if (hFrom !== null) {
           if (a.hour == null || a.hour < hFrom) return false;
         }
@@ -2587,8 +2677,10 @@
           if (a.hour == null || a.hour > hTo) return false;
         }
 
+        // Period dana (dan/noć)
         if (dnVal && a.dayNight !== dnVal) return false;
 
+        // Select filteri po kolonama
         function eqSel(sel, colName) {
           if (!sel.value) return true;
           return (a.raw[colName] || "").toString() === sel.value;
@@ -2606,6 +2698,7 @@
         if (!eqSel(fPjesaci, "Pješačka površina")) return false;
         if (!eqSel(fRasvjeta, "Rasvjeta")) return false;
 
+        // --- Povrijeđeni / poginuli ---
         const minP = fMinPovr.value !== "" ? Number(fMinPovr.value) : null;
         const maxP = fMaxPovr.value !== "" ? Number(fMaxPovr.value) : null;
         if (minP !== null && a.injuryTotal < minP) return false;
@@ -2616,25 +2709,34 @@
         if (minM !== null && a.deaths < minM) return false;
         if (maxM !== null && a.deaths > maxM) return false;
 
-        if (fUc.value) {
-          const needle = fUc.value.toLowerCase();
-          const hay = (a.participantsText || "").toLowerCase();
-          if (!hay.includes(needle)) return false;
+        // --- UČESNICI: filter preko odabranih ikonica ---
+        if (selectedParticipants.size > 0) {
+          let hasAny = false;
+
+          for (const label of selectedParticipants) {
+            const cnt = a.vehicleCounts ? (a.vehicleCounts[label] || 0) : 0;
+            if (cnt > 0) {
+              hasAny = true;
+              break;
+            }
+          }
+          if (!hasAny) return false;
         }
+
         return true;
       });
 
+      // --- 3) Pripremi podatke za DBSCAN ---
       accidents.forEach(a => { a.cluster6 = 0; a.cluster4 = 0; });
-
       accidentsInjury = accidents.filter(a => a.injuryTotal > 0);
 
-      drawBaseAccidents();
-
       if (accidentsInjury.length > 0) {
+        // Kriterij 1: ≥6 nezgoda u 100 m
         const pts1 = accidentsInjury.map(a => ({ lat: a.lat, lon: a.lon }));
         const { labels: labels6 } = dbscan(pts1, EPS_6, MINPTS_6);
         labels6.forEach((lab, i) => { if (lab > 0) accidentsInjury[i].cluster6 = lab; });
 
+        // Kriterij 2: ≥4 iste vrste u 100 m
         const byType = new Map();
         accidentsInjury.forEach((a, idx) => {
           const k = a.typeKey || "unknown";
@@ -2657,12 +2759,16 @@
         });
       }
 
+      // --- 4) Osvježi mapu, heatmapu i statistiku ---
+      drawBaseAccidents();
       drawDbscanResults();
       updateHeatmap();
       updateStatsPanel();
       updateAccidentsTable();
       statsDataCache = null;
     }
+
+
 
     function populateSelectOptions() {
       function collectUnique(colName) {
@@ -2683,9 +2789,9 @@
       }
 
       if (fDayNight) {
-  fDayNight.innerHTML = '<option value="">Svi periodi</option>';
-  fillSelect(fDayNight, collectUnique("Period dana"));
-}
+        fDayNight.innerHTML = '<option value="">Svi periodi</option>';
+        fillSelect(fDayNight, collectUnique("Period dana"));
+      }
 
       fillSelect(fPodrucje, collectUnique("Područje"));
       fillSelect(fTipPuta, collectUnique("Tip puta"));
@@ -2719,7 +2825,7 @@
         if (a.dowIndex == null) return;
         dowCounts[a.dowIndex - 1]++;
       });
-            // Mjeseci i godišnji trend
+      // Mjeseci i godišnji trend
       const monthNames = [
         "Januar", "Februar", "Mart", "April", "Maj", "Juni",
         "Juli", "August", "Septembar", "Oktobar", "Novembar", "Decembar"
@@ -2740,22 +2846,22 @@
         }
         yearMap[y].count++;
         yearMap[y].serious += a.serious || 0;
-        yearMap[y].minor   += a.minor   || 0;
-        yearMap[y].deaths  += a.deaths  || 0;
+        yearMap[y].minor += a.minor || 0;
+        yearMap[y].deaths += a.deaths || 0;
       });
 
       const monthLabels = monthNames;
-      const monthData   = monthCounts;
+      const monthData = monthCounts;
 
       monthLabels.forEach((lab, i) => {
         summary.push({ group: "Mjesec nastanka nezgode", label: lab, value: monthData[i] });
       });
 
-      const yearLabels  = Object.keys(yearMap).sort();
-      const yearCounts  = yearLabels.map(y => yearMap[y].count);
+      const yearLabels = Object.keys(yearMap).sort();
+      const yearCounts = yearLabels.map(y => yearMap[y].count);
       const yearSerious = yearLabels.map(y => yearMap[y].serious);
-      const yearMinor   = yearLabels.map(y => yearMap[y].minor);
-      const yearDeaths  = yearLabels.map(y => yearMap[y].deaths);
+      const yearMinor = yearLabels.map(y => yearMap[y].minor);
+      const yearDeaths = yearLabels.map(y => yearMap[y].deaths);
 
       yearLabels.forEach((lab, i) => {
         summary.push({
@@ -2782,24 +2888,24 @@
       hourLabels.forEach((lab, i) => summary.push({ group: "Sat u danu", label: lab, value: hourCounts[i] }));
 
       // Statistika po periodu dana – direktno iz kolone "Period dana"
-const dayNightCounts = {};
-acc.forEach(a => {
-  // a.dayNight je upravo ono što piše u "Period dana"
-  let dn = a.dayNight;
-  if (!dn) {
-    // sigurnosna mreža – ako je null, probaj direktno iz raw
-    dn = (a.raw["Period dana"] || "").toString().trim();
-  }
-  if (!dn) dn = "Nepoznato";
-  dayNightCounts[dn] = (dayNightCounts[dn] || 0) + 1;
-});
+      const dayNightCounts = {};
+      acc.forEach(a => {
+        // a.dayNight je upravo ono što piše u "Period dana"
+        let dn = a.dayNight;
+        if (!dn) {
+          // sigurnosna mreža – ako je null, probaj direktno iz raw
+          dn = (a.raw["Period dana"] || "").toString().trim();
+        }
+        if (!dn) dn = "Nepoznato";
+        dayNightCounts[dn] = (dayNightCounts[dn] || 0) + 1;
+      });
 
-const dioDanaLabels = Object.keys(dayNightCounts).sort();
-const dioDanaData = dioDanaLabels.map(k => dayNightCounts[k]);
+      const dioDanaLabels = Object.keys(dayNightCounts).sort();
+      const dioDanaData = dioDanaLabels.map(k => dayNightCounts[k]);
 
-dioDanaLabels.forEach((lab, i) =>
-  summary.push({ group: "Period dana", label: lab, value: dioDanaData[i] })
-);
+      dioDanaLabels.forEach((lab, i) =>
+        summary.push({ group: "Period dana", label: lab, value: dioDanaData[i] })
+      );
 
 
       function cat(colName, groupName) {
@@ -2818,14 +2924,14 @@ dioDanaLabels.forEach((lab, i) =>
       const tipPuta = cat("Tip puta", "Tip puta");
       const katPuta = cat("Kategorija saobraćajnice", "Kategorija saobraćajnice");
       const kolovoz = cat("Stanje kolovoza", "Stanje kolovoza");
-      const vremenske     = cat("Vremenske prilike", "Vremenske prilike");
-      const podrucje      = cat("Područje", "Područje");
-      const horizGeo      = cat("Horizontalna geometrija", "Horizontalna geometrija");
-      const vertGeo       = cat("Vertikalna geometrija", "Vertikalna geometrija");
+      const vremenske = cat("Vremenske prilike", "Vremenske prilike");
+      const podrucje = cat("Područje", "Područje");
+      const horizGeo = cat("Horizontalna geometrija", "Horizontalna geometrija");
+      const vertGeo = cat("Vertikalna geometrija", "Vertikalna geometrija");
       const tipRaskrsnice = cat("Tip raskrsnice", "Tip raskrsnice");
-      const tipPrelaza    = cat("Tip prelaza", "Tip prelaza");
-      const pjesPovrsina  = cat("Pješačka površina", "Pješačka površina");
-      const rasvjeta      = cat("Rasvjeta", "Rasvjeta");
+      const tipPrelaza = cat("Tip prelaza", "Tip prelaza");
+      const pjesPovrsina = cat("Pješačka površina", "Pješačka površina");
+      const rasvjeta = cat("Rasvjeta", "Rasvjeta");
 
 
       let sumDeaths = 0, sumSerious = 0, sumMinor = 0, sumInj = 0;
@@ -2846,36 +2952,36 @@ dioDanaLabels.forEach((lab, i) =>
 
       injLabels.forEach((lab, i) => summary.push({ group: "Povrede/poginuli", label: lab, value: injData[i] }));
 
-// Broj učesnika – bez kategorije "0"
-const partBuckets = { "1": 0, "2": 0, "3": 0, "4": 0, "5+": 0 };
+      // Broj učesnika – bez kategorije "0"
+      const partBuckets = { "1": 0, "2": 0, "3": 0, "4": 0, "5+": 0 };
 
-acc.forEach(a => {
-  const c = a.participantsCount ?? 0;
+      acc.forEach(a => {
+        const c = a.participantsCount ?? 0;
 
-  if (c === 1) partBuckets["1"]++;
-  else if (c === 2) partBuckets["2"]++;
-  else if (c === 3) partBuckets["3"]++;
-  else if (c === 4) partBuckets["4"]++;
-  else if (c >= 5) partBuckets["5+"]++;
-  // ako je c <= 0 – jednostavno ga ignorišemo, ne ide ni u jedan bucket
-});
+        if (c === 1) partBuckets["1"]++;
+        else if (c === 2) partBuckets["2"]++;
+        else if (c === 3) partBuckets["3"]++;
+        else if (c === 4) partBuckets["4"]++;
+        else if (c >= 5) partBuckets["5+"]++;
+        // ako je c <= 0 – jednostavno ga ignorišemo, ne ide ni u jedan bucket
+      });
 
-// napravi liste za graf, ali uzmi samo kategorije koje imaju bar 1 nezgodu
-const partLabels = [];
-const partData = [];
+      // napravi liste za graf, ali uzmi samo kategorije koje imaju bar 1 nezgodu
+      const partLabels = [];
+      const partData = [];
 
-Object.entries(partBuckets).forEach(([label, value]) => {
-  if (value === 0) return;   // preskoči prazne kategorije
+      Object.entries(partBuckets).forEach(([label, value]) => {
+        if (value === 0) return;   // preskoči prazne kategorije
 
-  partLabels.push(label);
-  partData.push(value);
+        partLabels.push(label);
+        partData.push(value);
 
-  summary.push({
-    group: "Broj učesnika",
-    label,
-    value
-  });
-});
+        summary.push({
+          group: "Broj učesnika",
+          label,
+          value
+        });
+      });
 
 
       const vehTotals = {};
@@ -2889,7 +2995,7 @@ Object.entries(partBuckets).forEach(([label, value]) => {
       const vehData = vehLabels.map(k => vehTotals[k]);
       vehLabels.forEach((lab, i) => summary.push({ group: "Vrste vozila/učesnika", label: lab, value: vehData[i] }));
 
-            return {
+      return {
         typeLabels, typeData,
         dowLabels, dowData: dowCounts,
         hourLabels, hourData: hourCounts,
@@ -2904,14 +3010,14 @@ Object.entries(partBuckets).forEach(([label, value]) => {
         katPutaLabels: katPuta.labels, katPutaData: katPuta.data,
         kolovozLabels: kolovoz.labels, kolovozData: kolovoz.data,
         // nove kategorije:
-        vremenskeLabels:     vremenske.labels,     vremenskeData:     vremenske.data,
-        podrucjeLabels:      podrucje.labels,      podrucjeData:      podrucje.data,
-        horizGeoLabels:      horizGeo.labels,      horizGeoData:      horizGeo.data,
-        vertGeoLabels:       vertGeo.labels,       vertGeoData:       vertGeo.data,
+        vremenskeLabels: vremenske.labels, vremenskeData: vremenske.data,
+        podrucjeLabels: podrucje.labels, podrucjeData: podrucje.data,
+        horizGeoLabels: horizGeo.labels, horizGeoData: horizGeo.data,
+        vertGeoLabels: vertGeo.labels, vertGeoData: vertGeo.data,
         tipRaskrsniceLabels: tipRaskrsnice.labels, tipRaskrsniceData: tipRaskrsnice.data,
-        tipPrelazaLabels:    tipPrelaza.labels,    tipPrelazaData:    tipPrelaza.data,
-        pjesPovrsinaLabels:  pjesPovrsina.labels,  pjesPovrsinaData:  pjesPovrsina.data,
-        rasvjetaLabels:      rasvjeta.labels,      rasvjetaData:      rasvjeta.data,
+        tipPrelazaLabels: tipPrelaza.labels, tipPrelazaData: tipPrelaza.data,
+        pjesPovrsinaLabels: pjesPovrsina.labels, pjesPovrsinaData: pjesPovrsina.data,
+        rasvjetaLabels: rasvjeta.labels, rasvjetaData: rasvjeta.data,
         // povrede, učesnici, vozila
         injLabels, injData,
         partLabels, partData,
@@ -2921,275 +3027,242 @@ Object.entries(partBuckets).forEach(([label, value]) => {
       };
     }
 
-   
-    
+    function chartTitle(metricKey) {
+      const titles = {
+        tip: "Broj nezgoda po tipu",
+        dow: "Nezgode po danu u sedmici",
+        hour: "Distribucija nezgoda po satu u danu",
+        month: "Nezgode po mjesecima",
+        yearTrend: "Trend nezgoda i posljedica po godinama",
+        tipputa: "Nezgode po tipu puta",
+        katputa: "Nezgode po kategoriji puta",
+        diodana: "Distribucija nezgoda – dan/noć",
+        kolovoz: "Nezgode po stanju kolovoza",
+        vremenske: "Nezgode po vremenskim prilikama",
+        podrucje: "Nezgode po području",
+        horiz: "Nezgode po horizontalnoj geometriji",
+        vert: "Nezgode po vertikalnoj geometriji",
+        raskrsnica: "Nezgode po tipu raskrsnice",
+        prelaz: "Nezgode po tipu prelaza",
+        pjesaci: "Pješačka površina i nezgode",
+        rasvjeta: "Nezgode po tipu rasvjete",
+        povrede: "Broj povrijeđenih i poginulih",
+        ucesnici: "Broj učesnika u nezgodi",
+        vozila: "Vrste vozila učesnika"
+      };
+
+      return titles[metricKey] || "Statistika saobraćajnih nezgoda";
+    }
+
+
+
+
     function renderStatsChart(metricKey) {
       if (!statsDataCache) return;
       const s = statsDataCache;
 
       let labels = [];
       let datasets = [];
-      let type = "bar";   // podrazumijevano
+      let type = "bar";
 
-      // ------------- ODABIR PODATAKA PO METRICI -------------
+      // ------------------ ODABIR PODATAKA ------------------
 
       if (metricKey === "tip") {
         labels = s.typeLabels;
-        datasets = [{
-          label: "Broj nezgoda po tipu",
-          data: s.typeData
-        }];
+        datasets = [{ label: "Broj nezgoda po tipu", data: s.typeData }];
 
       } else if (metricKey === "dow") {
         labels = s.dowLabels;
-        datasets = [{
-          label: "Nezgode po danu u sedmici",
-          data: s.dowData
-        }];
+        datasets = [{ label: "Nezgode po danu u sedmici", data: s.dowData }];
 
       } else if (metricKey === "hour") {
         labels = s.hourLabels;
         type = "line";
-        datasets = [{
-          label: "Nezgode po satu u danu",
-          data: s.hourData
-        }];
+        datasets = [{ label: "Nezgode po satu u danu", data: s.hourData }];
 
-      // --- NOVO: mjeseci ---
       } else if (metricKey === "month") {
         labels = s.monthLabels;
-        datasets = [{
-          label: "Nezgode po mjesecima",
-          data: s.monthData
-        }];
+        datasets = [{ label: "Nezgode po mjesecima", data: s.monthData }];
 
-      // --- NOVO: trend po godinama (više serija) ---
       } else if (metricKey === "yearTrend") {
         labels = s.yearLabels;
         type = "line";
         datasets = [
-          {
-            label: "Ukupno nezgoda",
-            data: s.yearCounts,
-            borderWidth: 2,
-            tension: 0.25,
-            fill: false
-          },
-          {
-            label: "Teško povrijeđeni",
-            data: s.yearSerious,
-            borderWidth: 2,
-            tension: 0.25,
-            fill: false
-          },
-          {
-            label: "Lako povrijeđeni",
-            data: s.yearMinor,
-            borderWidth: 2,
-            tension: 0.25,
-            fill: false
-          },
-          {
-            label: "Smrtno stradali",
-            data: s.yearDeaths,
-            borderWidth: 2,
-            tension: 0.25,
-            fill: false
-          }
+          { label: "Ukupno nezgoda", data: s.yearCounts },
+          { label: "Teško povrijeđeni", data: s.yearSerious },
+          { label: "Lako povrijeđeni", data: s.yearMinor },
+          { label: "Smrtno stradali", data: s.yearDeaths }
         ];
 
       } else if (metricKey === "tipputa") {
         labels = s.tipPutaLabels;
-        datasets = [{
-          label: "Nezgode po tipu puta",
-          data: s.tipPutaData
-        }];
+        datasets = [{ label: "Nezgode po tipu puta", data: s.tipPutaData }];
 
       } else if (metricKey === "katputa") {
         labels = s.katPutaLabels;
-        datasets = [{
-          label: "Nezgode po kategoriji puta",
-          data: s.katPutaData
-        }];
+        datasets = [{ label: "Nezgode po kategoriji puta", data: s.katPutaData }];
 
       } else if (metricKey === "diodana") {
         labels = s.dioDanaLabels;
         type = "pie";
-        datasets = [{
-          label: "Dan / Noć",
-          data: s.dioDanaData
-        }];
+        datasets = [{ label: "Period dana", data: s.dioDanaData }];
 
       } else if (metricKey === "kolovoz") {
         labels = s.kolovozLabels;
         type = "pie";
-        datasets = [{
-          label: "Stanje kolovoza",
-          data: s.kolovozData
-        }];
+        datasets = [{ label: "Stanje kolovoza", data: s.kolovozData }];
 
-      // --- NOVO: vremenske, područje, geometrije, raskrsnice, prelazi, pješ. površina, rasvjeta ---
       } else if (metricKey === "vremenske") {
         labels = s.vremenskeLabels;
-        datasets = [{
-          label: "Nezgode po vremenskim prilikama",
-          data: s.vremenskeData
-        }];
+        datasets = [{ label: "Nezgode po vremenskim prilikama", data: s.vremenskeData }];
 
       } else if (metricKey === "podrucje") {
         labels = s.podrucjeLabels;
-        datasets = [{
-          label: "Nezgode po području",
-          data: s.podrucjeData
-        }];
+        datasets = [{ label: "Nezgode po području", data: s.podrucjeData }];
 
       } else if (metricKey === "horiz") {
         labels = s.horizGeoLabels;
-        datasets = [{
-          label: "Horizontalna geometrija",
-          data: s.horizGeoData
-        }];
+        datasets = [{ label: "Horizontalna geometrija", data: s.horizGeoData }];
 
       } else if (metricKey === "vert") {
         labels = s.vertGeoLabels;
-        datasets = [{
-          label: "Vertikalna geometrija",
-          data: s.vertGeoData
-        }];
+        datasets = [{ label: "Vertikalna geometrija", data: s.vertGeoData }];
 
       } else if (metricKey === "raskrsnica") {
         labels = s.tipRaskrsniceLabels;
-        datasets = [{
-          label: "Tip raskrsnice",
-          data: s.tipRaskrsniceData
-        }];
+        datasets = [{ label: "Tip raskrsnice", data: s.tipRaskrsniceData }];
 
       } else if (metricKey === "prelaz") {
         labels = s.tipPrelazaLabels;
-        datasets = [{
-          label: "Tip prelaza",
-          data: s.tipPrelazaData
-        }];
+        datasets = [{ label: "Tip prelaza", data: s.tipPrelazaData }];
 
       } else if (metricKey === "pjesaci") {
         labels = s.pjesPovrsinaLabels;
-        datasets = [{
-          label: "Pješačka površina",
-          data: s.pjesPovrsinaData
-        }];
+        datasets = [{ label: "Pješačka površina", data: s.pjesPovrsinaData }];
 
       } else if (metricKey === "rasvjeta") {
         labels = s.rasvjetaLabels;
-        datasets = [{
-          label: "Rasvjeta",
-          data: s.rasvjetaData
-        }];
+        datasets = [{ label: "Rasvjeta", data: s.rasvjetaData }];
 
       } else if (metricKey === "povrede") {
         labels = s.injLabels;
-        datasets = [{
-          label: "Povrede i poginuli",
-          data: s.injData
-        }];
+        datasets = [{ label: "Povrede i poginuli", data: s.injData }];
 
       } else if (metricKey === "ucesnici") {
         labels = s.partLabels;
-        datasets = [{
-          label: "Broj učesnika",
-          data: s.partData
-        }];
+        datasets = [{ label: "Broj učesnika", data: s.partData }];
 
       } else if (metricKey === "vozila") {
         labels = s.vehLabels;
-        datasets = [{
-          label: "Vrste vozila/učesnika",
-          data: s.vehData
-        }];
+        datasets = [{ label: "Vrste vozila/učesnika", data: s.vehData }];
       }
 
-      // ------------- KREIRANJE GRAFA -------------
+      // ------------------ STIL GRAFA ------------------
 
       if (statsChart) statsChart.destroy();
       const ctx = document.getElementById("stats-chart").getContext("2d");
 
+      // bijela pozadina unutar canvasa (važno i za eksport)
+      const whiteBgPlugin = {
+        id: "whiteBackground",
+        beforeDraw(chart) {
+          const { ctx, width, height } = chart;
+          ctx.save();
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, width, height);
+          ctx.restore();
+        }
+      };
+
+      // paleta za više serija (trend po godinama)
+      const palette = ["#ef4444", "#2563eb", "#16a34a", "#9333ea"];
+
       if (type === "pie") {
-        const ds = datasets[0] || { label: "", data: [] };
-
-        statsChart = new Chart(ctx, {
-          type: "pie",
-          data: {
-            labels,
-            datasets: [{
-              label: ds.label,
-              data: ds.data,
-              backgroundColor: [
-                "rgba(248,113,113,0.8)",
-                "rgba(251,146,60,0.8)",
-                "rgba(52,211,153,0.8)",
-                "rgba(59,130,246,0.8)",
-                "rgba(139,92,246,0.8)",
-                "rgba(234,179,8,0.8)",
-                "rgba(96,165,250,0.8)"
-              ]
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                position: "bottom",
-                labels: { color: "#e5e7eb", font: { size: 11 } }
-              }
-            }
-          }
-        });
-
+        // pie – jedna serija, više boja
+        const colors = [
+          "#ef4444", "#f97316", "#eab308", "#22c55e",
+          "#3b82f6", "#6366f1", "#a855f7", "#ec4899",
+          "#14b8a6", "#0ea5e9", "#84cc16", "#f97316"
+        ];
+        datasets[0].backgroundColor = datasets[0].data.map((_, i) => colors[i % colors.length]);
       } else {
-        // bar ili line – može imati više serija (npr. trend po godinama)
-        statsChart = new Chart(ctx, {
-          type,
-          data: {
-            labels,
-            datasets: datasets.map((ds, i) => ({
-              ...ds,
-              borderColor: ds.borderColor || [
-                "rgba(248,113,113,1)",
-                "rgba(251,191,36,1)",
-                "rgba(59,130,246,1)",
-                "rgba(139,92,246,1)"
-              ][i] || "rgba(248,113,113,1)",
-              backgroundColor: ds.backgroundColor || (
-                type === "line"
-                  ? "rgba(248,113,113,0.3)"
-                  : "rgba(248,113,113,0.8)"
-              ),
-              borderWidth: ds.borderWidth || 1,
-              tension: ds.tension != null ? ds.tension : (type === "line" ? 0.25 : 0)
-            }))
+        // bar/line – podešavanje boja svake serije
+        datasets = datasets.map((ds, i) => ({
+          ...ds,
+          borderColor: palette[i % palette.length],
+          backgroundColor:
+            type === "line"
+              ? palette[i % palette.length] + "33" // prozirno za linije
+              : palette[i % palette.length] + "dd", // punije za stubiće
+          borderWidth: 2,
+          tension: type === "line" ? 0.25 : 0
+        }));
+      }
+
+      const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: {
+          padding: { left: 60, right: 40, top: 40, bottom: 80 } // odmak od ivica
+        },
+        plugins: {
+          legend: {
+            display: type === "pie" || datasets.length > 1,
+            position: "bottom",
+            labels: {
+              color: "#111827",
+              font: { size: 11 }
+            }
           },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              x: {
-                ticks: { color: "#e5e7eb", font: { size: 10 } },
-                grid: { color: "#111827" }
-              },
-              y: {
-                beginAtZero: true,
-                ticks: { color: "#e5e7eb" },
-                grid: { color: "#111827" }
-              }
+          title: {
+            display: true,
+            text: chartTitle(metricKey),
+            color: "#111827",
+            font: { size: 16, weight: "bold" },
+            padding: { top: 10, bottom: 20 }
+          },
+          tooltip: { enabled: true }
+        }
+
+      };
+
+      if (type !== "pie") {
+        options.scales = {
+          x: {
+            ticks: {
+              color: "#111827",           // TAMNE labele X
+              font: { size: 10 },
+              maxRotation: 45,
+              minRotation: 45
             },
-            plugins: {
-              legend: { display: datasets.length > 1 }  // npr. za trend po godinama
+            grid: {
+              color: "rgba(0,0,0,0.10)",  // blaže pomoćne linije
+              borderColor: "#111827",
+              borderWidth: 1
+            }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: "#111827",           // TAMNI brojevi na Y
+              font: { size: 10 }
+            },
+            grid: {
+              color: "rgba(0,0,0,0.10)",  // blaže grid linije
+              borderColor: "#111827",
+              borderWidth: 1
             }
           }
-        });
+        };
       }
-    }
 
+      statsChart = new Chart(ctx, {
+        type,
+        data: { labels, datasets },
+        options,
+        plugins: [whiteBgPlugin]
+      });
+    }
 
 
     function openStatsModal() {
@@ -3297,6 +3370,11 @@ Object.entries(partBuckets).forEach(([label, value]) => {
       if (yearSel && yearSel.value !== "all") {
         parts.push(`Godina: ${yearSel.options[yearSel.selectedIndex].text}`);
       }
+
+      if (selectedParticipants.size > 0) {
+        parts.push("Učesnici: " + Array.from(selectedParticipants).join(", "));
+      }
+
 
       // Ako nema filtera
       if (parts.length === 0) {
@@ -3774,14 +3852,14 @@ Object.entries(partBuckets).forEach(([label, value]) => {
           }
 
           const timeStr = row["Vrijeme nastanka saobraćajne nezgode"] || "";
-const hour = extractHourFromTimeStr(timeStr);
+          const hour = extractHourFromTimeStr(timeStr);
 
-// Uzimamo vrijednost DIREKTNO iz kolone "Period dana"
-let dayNight = null;
-if (row["Period dana"] != null) {
-  dayNight = row["Period dana"].toString().trim();
-  if (dayNight === "") dayNight = null;
-}
+          // Uzimamo vrijednost DIREKTNO iz kolone "Period dana"
+          let dayNight = null;
+          if (row["Period dana"] != null) {
+            dayNight = row["Period dana"].toString().trim();
+            if (dayNight === "") dayNight = null;
+          }
 
 
           accidentsAll.push({
@@ -3917,15 +3995,53 @@ if (row["Period dana"] != null) {
     });
 
     btnClearFilters.addEventListener("click", () => {
+      // 1) Reset osnovnih filtera (datum, sat, dan u sedmici, dio dana)
       [fDateFrom, fDateTo, fHourFrom, fHourTo].forEach(el => el.value = "");
       fDow.value = "";
       fDayNight.value = "";
 
+      // 2) Reset numeričkih filtera i tekstualnog (povrede, poginuli, slobodni unos)
       [fMinPovr, fMaxPovr, fMinMrtvi, fMaxMrtvi, fUc].forEach(el => el.value = "");
-      [fPodrucje, fTipPuta, fKatPuta, fHorizGeo, fVertGeo, fTipRask, fTipPrel,
-        fVremenske, fKolovoz, fPjesaci, fRasvjeta].forEach(sel => sel.value = "");
+
+      // 3) Reset svih select polja za uslove na cesti
+      [
+        fPodrucje, fTipPuta, fKatPuta, fHorizGeo, fVertGeo, fTipRask, fTipPrel,
+        fVremenske, fKolovoz, fPjesaci, fRasvjeta
+      ].forEach(sel => sel.value = "");
+
+      // 4) RESET UČESNIKA (ikonice)
+      //    – praznimo Set → nema aktivnog filtera po učesnicima
+      selectedParticipants.clear();
+
+      //    – vizuelno ugasimo sve ikonice (niko nije aktivan)
+      const chips = document.querySelectorAll("#participant-filter .participant-chip");
+      chips.forEach(chip => chip.classList.remove("active"));
+
+      // 5) Ponovo primijeni filtere i osvježi sve (mapa, klasteri, statistika, tabela)
       applyFiltersAndRunDbscan();
     });
+
+
+    if (participantFilterEl) {
+      participantFilterEl.addEventListener("click", (e) => {
+        const btn = e.target.closest(".participant-chip");
+        if (!btn) return;
+
+        const part = btn.dataset.part;
+        if (!part) return;
+
+        if (selectedParticipants.has(part)) {
+          selectedParticipants.delete(part);
+          btn.classList.remove("active");
+        } else {
+          selectedParticipants.add(part);
+          btn.classList.add("active");
+        }
+
+        applyFiltersAndRunDbscan();
+      });
+    }
+
 
     btnMeasure.addEventListener("click", resetMeasurement);
     btnShowStats.addEventListener("click", openStatsModal);
