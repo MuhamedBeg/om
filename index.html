@@ -224,6 +224,66 @@
       background: #1f2937;
     }
 
+
+    /* Stanje dugmeta za mjerenje */
+    #btn-measure.btn-measure-off {
+      background: #1d4ed8;
+      /* klasična plava kao primary */
+      color: #f9fafb;
+    }
+
+    #btn-measure.btn-measure-on {
+      background: #dc2626;
+      /* crvenije kad je aktivno */
+      color: #fef2f2;
+    }
+
+    /* Plutajući badge za mjerenje */
+    .measure-badge {
+      position: fixed;
+      /* pluta iznad mape */
+      bottom: 36px;
+      left: 16px;
+      z-index: 1400;
+      display: none;
+      /* skriva se dok nije aktivno */
+      align-items: center;
+      gap: 6px;
+
+      padding: 6px 12px;
+      border-radius: 999px;
+
+      font-size: 12px;
+      font-weight: 500;
+      background: rgba(15, 23, 42, 0.92);
+      /* tamna pozadina */
+      color: #e5e7eb;
+
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+
+    /* Pravougaoni badge – malo iznad mjerenja + druga nijansa */
+    .box-badge {
+      bottom: 72px;
+      /* iznad mjernog badga */
+      background: rgba(15, 23, 42, 0.92);
+      /* ljubičasta nijansa */
+    }
+
+    /* Button stanja za pravougaonik (analogno mjerenju) */
+    #btn-box-select.btn-box-off {
+      background: #1d4ed8;
+      color: #e5e7eb;
+    }
+
+    #btn-box-select.btn-box-on {
+      background: #dc2626;
+      /* ljubičasta kad je ON */
+      color: #fef2ff;
+    }
+
     .legend-item {
       display: flex;
       align-items: center;
@@ -1230,7 +1290,7 @@
           <div class="tab-panel" id="tab-alati">
             <div class="panel">
               <h2><span class="emoji">📏</span>Mjerenje udaljenosti</h2>
-              <button class="primary" id="btn-measure">Pokreni mjerenje</button>
+              <button class="primary" id="btn-measure">✏ Pokreni mjerenje</button>
               <p class="measure-info" id="measure-info">
                 Klikni na mapu da dodaš tačke rute. Udaljenosti se sabiraju duž linije.
               </p>
@@ -1239,7 +1299,7 @@
             <div class="panel">
               <h2><span class="emoji">🖼️</span>Lokalna analiza (pravougaonik)</h2>
               <button class="secondary" id="btn-box-select">
-                🖼️ Selektuj područje (pravougaonik)
+                🖼️ Selektuj područje
               </button>
               <p class="measure-info" id="box-select-info">
                 Klikni na dugme, zatim klikni i povuci po mapi da označiš područje za lokalnu analizu.
@@ -1297,6 +1357,13 @@
         </div>
       </div>
     </aside>
+    <div id="measure-badge" class="measure-badge">
+      ✏ Mjerenje udaljenosti je AKTIVNO
+    </div>
+    <div id="box-badge" class="measure-badge box-badge">
+      🖼️ Pravougaona selekcija je AKTIVNA
+    </div>
+
   </main>
 
   <!-- Banner sa aktivnim filterima -->
@@ -1495,6 +1562,7 @@
 
 
     const measureInfo = document.getElementById("measure-info");
+    const measureBadge = document.getElementById("measure-badge");
     const statusText = document.getElementById("status-text");
     const statTotal = document.getElementById("stat-total");
     const statInjury = document.getElementById("stat-injury");
@@ -1613,6 +1681,10 @@
     const btnExportStats = document.getElementById("btn-export-stats");
     const btnBoxSelect = document.getElementById("btn-box-select");
     const boxSelectInfo = document.getElementById("box-select-info");
+    const boxBadge = document.getElementById("box-badge");
+
+    // inicijalno stanje dugmeta za pravougaonik
+    btnBoxSelect.classList.add("btn-box-off");
 
     const accTableBody = document.getElementById("acc-table-body");
 
@@ -3514,12 +3586,12 @@
     }
 
 
+
     function toggleMeasurement() {
       if (measuringActive) {
         // ➜ GASI MJERENJE
         measuringActive = false;
 
-        // Po želji očisti liniju i markere
         if (measurePolyline) {
           map.removeLayer(measurePolyline);
           measurePolyline = null;
@@ -3531,9 +3603,13 @@
         measureInfo.textContent =
           "Mjerenje je isključeno. Klikni na dugme da ga ponovo pokreneš.";
 
-        btnMeasure.textContent = "Pokreni mjerenje";
+        // dugme: ikonica ✏ + tekst
+        btnMeasure.innerHTML = "✏ Pokreni mjerenje";
         btnMeasure.classList.remove("btn-measure-on");
         btnMeasure.classList.add("btn-measure-off");
+
+        // sakrij badge
+        if (measureBadge) measureBadge.style.display = "none";
 
       } else {
         // ➜ UKLJUČI MJERENJE (reset)
@@ -3550,11 +3626,22 @@
         measureInfo.textContent =
           "Mjerenje aktivno: klikni na mapu da dodaš tačke rute.";
 
-        btnMeasure.textContent = "Isključi mjerenje";
+        // dugme: ikonica ❌ + tekst
+        btnMeasure.innerHTML = "❌ Isključi mjerenje";
         btnMeasure.classList.remove("btn-measure-off");
         btnMeasure.classList.add("btn-measure-on");
+
+        // prikaži badge
+        if (measureBadge) {
+          measureBadge.innerHTML = "✏ Mjerenje udaljenosti je AKTIVNO";
+          measureBadge.style.display = "flex";
+        }
       }
     }
+
+
+
+
 
 
 
@@ -4127,20 +4214,32 @@
       boxSelectActive = !boxSelectActive;
 
       if (boxSelectActive) {
-        // uključen mod selekcije pravougaonikom
-        btnBoxSelect.classList.remove("secondary");
-        btnBoxSelect.classList.add("primary");
-        btnBoxSelect.textContent = "🖼️ Selektovanje aktivno – povuci pravougaonik";
+        // ➜ UKLJUČEN mod selekcije pravougaonikom
+        btnBoxSelect.classList.remove("btn-box-off", "secondary");
+        btnBoxSelect.classList.add("btn-box-on", "primary");
+        btnBoxSelect.innerHTML = "❌ Isključi selektovanje";
+
         boxSelectInfo.textContent =
           "Klikni i povuci po mapi da označiš područje. Puštanjem miša dobijaš lokalnu statistiku.";
+
+        if (boxBadge) {
+          boxBadge.style.display = "flex";
+          boxBadge.innerHTML = "🖼️ Pravougaona selekcija je AKTIVNA";
+        }
       } else {
-        // isključen mod
-        btnBoxSelect.classList.remove("primary");
-        btnBoxSelect.classList.add("secondary");
-        btnBoxSelect.textContent = "🖼️ Selektuj područje (pravougaonik)";
+        // ➜ ISKLJUČEN mod
+        btnBoxSelect.classList.remove("btn-box-on", "primary");
+        btnBoxSelect.classList.add("btn-box-off", "secondary");
+        btnBoxSelect.innerHTML = "🖼️ Selektuj područje";
+
         clearBoxSelection();
+
+        if (boxBadge) {
+          boxBadge.style.display = "none";
+        }
       }
     });
+
 
 
     loadAndInit();
@@ -4149,4 +4248,3 @@
 </body>
 
 </html>
-
