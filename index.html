@@ -647,6 +647,21 @@
       cursor: pointer;
     }
 
+    /* Dugme za mjerenje – normalno stanje */
+    .btn-measure-off {
+      background: #2563eb !important;
+      /* plava */
+      color: #f9fafb !important;
+    }
+
+    /* Dugme za mjerenje – aktivno stanje */
+    .btn-measure-on {
+      background: #b91c1c !important;
+      /* crvena */
+      color: #ffffff !important;
+      box-shadow: 0 0 12px rgba(185, 28, 28, 0.4);
+    }
+
     .stats-metric-btn.active {
       background: #2563eb;
       color: #f9fafb;
@@ -1500,8 +1515,31 @@
     });
 
 
-    const participantFilterEl = document.getElementById("participant-filter");
+    const participantFilterEl = document.getElementById("participants-filter");
     const selectedParticipants = new Set();
+
+    if (participantFilterEl) {
+      participantFilterEl.addEventListener("click", (e) => {
+        const btn = e.target.closest(".participant-chip");
+        if (!btn) return;
+
+        // Uzimamo vrijednost iz data-cat
+        const part = btn.dataset.cat;
+        if (!part) return;
+
+        if (selectedParticipants.has(part)) {
+          selectedParticipants.delete(part);
+          btn.classList.remove("active");
+        } else {
+          selectedParticipants.add(part);
+          btn.classList.add("active");
+        }
+
+        applyFiltersAndRunDbscan();
+      });
+    }
+
+
 
 
 
@@ -1568,6 +1606,7 @@
 
     const btnClearFilters = document.getElementById("btn-clear-filters");
     const btnMeasure = document.getElementById("btn-measure");
+    btnMeasure.classList.add("btn-measure-off");
     const btnShowStats = document.getElementById("btn-show-stats");
     const btnShowStats2 = document.getElementById("btn-show-stats-2");
     const btnExportAccidents = document.getElementById("btn-export-accidents");
@@ -2140,6 +2179,8 @@
     }
 
 
+
+
     function getFilterSummaryText() {
       const parts = [];
       let filtered = false;
@@ -2211,6 +2252,12 @@
         filtered = true;
       }
 
+      // 🔹 Novo – filter po ikonicama učesnika
+      if (selectedParticipants.size > 0) {
+        parts.push("učesnici: " + Array.from(selectedParticipants).join(", "));
+        filtered = true;
+      }
+
       const totalAll = accidentsAll.length || 0;
       const totalFiltered = accidents.length || 0;
 
@@ -2222,6 +2269,12 @@
       const text = `Aktivni filteri: ${parts.join(", ")}. Prikazano nezgoda: ${totalFiltered} od ukupno ${totalAll}.`;
       return { text, filtered: true };
     }
+
+
+
+
+
+
 
     function updateStatsPanel() {
       // osnovne brojke
@@ -2630,24 +2683,7 @@
       }
     }
 
-    const participantChips = document.querySelectorAll(".participant-chip");
 
-    participantChips.forEach(chip => {
-      chip.addEventListener("click", () => {
-        const cat = chip.dataset.cat;   // npr. "Pješak", "Autobus"...
-
-        // toggle vizuelnog stanja
-        const isActive = chip.classList.toggle("active");
-
-        if (isActive) {
-          selectedParticipants.add(cat);     // ➜ klik = uključi kategoriju
-        } else {
-          selectedParticipants.delete(cat);  // ➜ ponovni klik = isključi
-        }
-
-        applyFiltersAndRunDbscan();
-      });
-    });
 
     function applyFiltersAndRunDbscan() {
       // --- 1) Pročitaj vrijednosti filtera ---
@@ -2713,13 +2749,14 @@
         if (selectedParticipants.size > 0) {
           let hasAny = false;
 
+          const vc = a.vehicleCounts || {};
           for (const label of selectedParticipants) {
-            const cnt = a.vehicleCounts ? (a.vehicleCounts[label] || 0) : 0;
-            if (cnt > 0) {
+            if ((vc[label] || 0) > 0) {
               hasAny = true;
               break;
             }
           }
+
           if (!hasAny) return false;
         }
 
@@ -3476,14 +3513,50 @@
       }
     }
 
-    function resetMeasurement() {
-      measuringActive = true;
-      measurePoints = [];
-      if (measurePolyline) { map.removeLayer(measurePolyline); measurePolyline = null; }
-      measureMarkers.forEach(m => map.removeLayer(m));
-      measureMarkers = [];
-      measureInfo.textContent = "Mjerenje aktivno: klikni na mapu da dodaš tačke rute.";
+
+    function toggleMeasurement() {
+      if (measuringActive) {
+        // ➜ GASI MJERENJE
+        measuringActive = false;
+
+        // Po želji očisti liniju i markere
+        if (measurePolyline) {
+          map.removeLayer(measurePolyline);
+          measurePolyline = null;
+        }
+        measureMarkers.forEach(m => map.removeLayer(m));
+        measureMarkers = [];
+        measurePoints = [];
+
+        measureInfo.textContent =
+          "Mjerenje je isključeno. Klikni na dugme da ga ponovo pokreneš.";
+
+        btnMeasure.textContent = "Pokreni mjerenje";
+        btnMeasure.classList.remove("btn-measure-on");
+        btnMeasure.classList.add("btn-measure-off");
+
+      } else {
+        // ➜ UKLJUČI MJERENJE (reset)
+        measuringActive = true;
+
+        measurePoints = [];
+        if (measurePolyline) {
+          map.removeLayer(measurePolyline);
+          measurePolyline = null;
+        }
+        measureMarkers.forEach(m => map.removeLayer(m));
+        measureMarkers = [];
+
+        measureInfo.textContent =
+          "Mjerenje aktivno: klikni na mapu da dodaš tačke rute.";
+
+        btnMeasure.textContent = "Isključi mjerenje";
+        btnMeasure.classList.remove("btn-measure-off");
+        btnMeasure.classList.add("btn-measure-on");
+      }
     }
+
+
 
     function onMapClickMeasure(e) {
       if (!measuringActive) return;
@@ -3995,55 +4068,36 @@
     });
 
     btnClearFilters.addEventListener("click", () => {
-      // 1) Reset osnovnih filtera (datum, sat, dan u sedmici, dio dana)
+      // 1) Reset osnovnih filtera
       [fDateFrom, fDateTo, fHourFrom, fHourTo].forEach(el => el.value = "");
       fDow.value = "";
       fDayNight.value = "";
 
-      // 2) Reset numeričkih filtera i tekstualnog (povrede, poginuli, slobodni unos)
+      // 2) Reset numeričkih i tekstualnog
       [fMinPovr, fMaxPovr, fMinMrtvi, fMaxMrtvi, fUc].forEach(el => el.value = "");
 
-      // 3) Reset svih select polja za uslove na cesti
+      // 3) Reset svih select polja
       [
         fPodrucje, fTipPuta, fKatPuta, fHorizGeo, fVertGeo, fTipRask, fTipPrel,
         fVremenske, fKolovoz, fPjesaci, fRasvjeta
       ].forEach(sel => sel.value = "");
 
-      // 4) RESET UČESNIKA (ikonice)
-      //    – praznimo Set → nema aktivnog filtera po učesnicima
-      selectedParticipants.clear();
+      // 4) Učesnici – potpuno resetovanje
+      selectedParticipants.clear();  // Set je prazan → nema filtera po učesnicima
 
-      //    – vizuelno ugasimo sve ikonice (niko nije aktivan)
-      const chips = document.querySelectorAll("#participant-filter .participant-chip");
-      chips.forEach(chip => chip.classList.remove("active"));
+      document
+        .querySelectorAll("#participants-filter .participant-chip.active")
+        .forEach(chip => chip.classList.remove("active"));
 
-      // 5) Ponovo primijeni filtere i osvježi sve (mapa, klasteri, statistika, tabela)
+
+      // 5) Ponovo primijeni filtere
       applyFiltersAndRunDbscan();
     });
 
 
-    if (participantFilterEl) {
-      participantFilterEl.addEventListener("click", (e) => {
-        const btn = e.target.closest(".participant-chip");
-        if (!btn) return;
-
-        const part = btn.dataset.part;
-        if (!part) return;
-
-        if (selectedParticipants.has(part)) {
-          selectedParticipants.delete(part);
-          btn.classList.remove("active");
-        } else {
-          selectedParticipants.add(part);
-          btn.classList.add("active");
-        }
-
-        applyFiltersAndRunDbscan();
-      });
-    }
 
 
-    btnMeasure.addEventListener("click", resetMeasurement);
+    btnMeasure.addEventListener("click", toggleMeasurement);
     btnShowStats.addEventListener("click", openStatsModal);
     btnShowStats2.addEventListener("click", openStatsModal);
     btnCloseStats.addEventListener("click", closeStatsModal);
